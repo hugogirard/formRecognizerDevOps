@@ -16,10 +16,11 @@ jobs:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
       location: 'eastus'
       #location: ${{ github.event.inputs.location }}
-      environmentName: 'dev'
+      environmentName: 'dev'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+      spIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
   create-qa-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -27,10 +28,11 @@ jobs:
       resourceGroupName: 'rg-form-recognizer-devops-qa'
       location: 'eastus'
       #location: ${{ github.event.inputs.location }}
-      environmentName: 'dev'
+      environmentName: 'qa'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+      spIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
   create-prod-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -38,7 +40,8 @@ jobs:
       resourceGroupName: 'rg-form-recognizer-devops-prod'
       location: 'eastus'
       #location: ${{ github.event.inputs.location }}
-      environmentName: 'dev'
+      environmentName: 'prod'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+      spIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}

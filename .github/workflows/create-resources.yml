@@ -9,12 +9,14 @@ on:
         type: string
       environmentName:
         required: true
-        type: string        
+        type: string
     secrets:
       azure_credentials:
         required: true
       subscriptionId:
         required: true
+      spIdentity:
+        required: true        
     outputs:
       formRecognizerEndpoint:
         description: 'The form recognizer endpoint'
@@ -59,4 +61,4 @@ jobs:
           subscriptionId: ${{ secrets.subscriptionId }}
           resourceGroupName: ${{ inputs.resourceGroupName }}
           template: ./bicep/main.json
-          parameters: environment=${{ inputs.environmentName }}
+          parameters: environment=${{ inputs.environmentName }} spIdentity=${{ secrets.spIdentity }}
