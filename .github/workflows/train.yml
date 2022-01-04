@@ -15,7 +15,7 @@ jobs:
       - name: Azure Login
         uses: Azure/login@v1.1
         with:          
-          creds: ${{ secrets.SP_AZURE_CREDENTIALS }}          
+          creds: ${{ secrets.AZURE_CREDENTIALS }}          
           enable-AzPSSession: false      
 
       - uses: Azure/get-keyvault-secrets@v1
