@@ -7,7 +7,7 @@ on:
       location:
         required: true
         type: string
-    environmentName:
+      environmentName:
         required: true
         type: string        
     secrets:
