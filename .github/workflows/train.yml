@@ -20,6 +20,14 @@ jobs:
 
       - uses: Azure/get-keyvault-secrets@v1
         with:
-          keyvault: "myKeyVault"
-          secrets: 'mySecret1, mySecret2'
-        id: vaultSecrets      
+          keyvault: ${{ secrets.KEYVAULT_DEV_NAME }}
+          secrets: 'frmEndpoint, frmKey, strCnxString'
+        id: vaultSecrets
+
+      # Upload the file in the Azure Storage
+      - uses: bacongobbler/azure-blob-storage-upload@v1.2.0
+        with:
+          source_dir: model
+          container_name: documents
+          connection_string: ${{ steps.vaultSecrets.outputs.strCnxString }}          
+          sync: false       
