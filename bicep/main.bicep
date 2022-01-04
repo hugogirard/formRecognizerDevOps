@@ -32,26 +32,15 @@ module cognitives 'modules/cognitives/form.bicep' = {
   }
 }
 
-// var environments = [
-//   'DEV'
-//   'QA'
-//   'PROD'
-// ]
+module storage 'modules/storage/storage.bicep' = {
+  name: 'storage-${environment}'
+  params: {
+    location: location
+    suffix: suffix
+    environment: environment
+  }
+}
 
-// module cognitives 'modules/cognitives/form.bicep' = [for env in environments: {
-//   name: 'cognitives-${env}'
-//   params: {
-//     location: location
-//     suffix: suffix
-//     environment: env
-//   }
-// }]
+output frmEndpoint string = cognitives.outputs.frmEndpoint
+output frmKey string = cognitives.outputs.frmKey
 
-// module storage 'modules/storage/storage.bicep' = [for env in environments: {
-//   name: 'storage-${env}'
-//   params: {
-//     location: location
-//     suffix: suffix
-//     environment: env
-//   }
-// }]
