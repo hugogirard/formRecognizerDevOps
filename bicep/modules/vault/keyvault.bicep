@@ -1,13 +1,19 @@
 param location string
 param suffix string
-param environment string
+param environmentName string
 param spIdentity string
 
 param frmRecognizerEndpoint string
 param frmKey string
 
+param strDocumentName string
+param strDocumentId string
+param strDocumentApiVersion string
+
+var strCnxString = 'DefaultEndpointsProtocol=https;AccountName=${strDocumentName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(strDocumentId, strDocumentApiVersion).keys[0].value}'
+
 resource keyvault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
-  name: 'vault-${environment}-${suffix}'
+  name: 'vault-${environmentName}-${suffix}'
   location: location
   properties: {
     accessPolicies: [
@@ -42,5 +48,13 @@ resource secretKey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   parent: keyvault
   properties: {
     value: frmKey
+  }
+}
+
+resource secretStorageCnxString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = if (environmentName == 'dev') { 
+  name: 'frmCnxString'
+  parent: keyvault
+  properties: {
+    value: strCnxString
   }
 }

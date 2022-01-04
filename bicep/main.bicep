@@ -51,7 +51,7 @@ module keyVault 'modules/vault/keyvault.bicep' = {
     location: location
     suffix: suffix
     spIdentity: spIdentity
-    environment: environment
+    environmentName: environment
     frmKey: cognitives.outputs.frmKey
     frmRecognizerEndpoint: cognitives.outputs.frmEndpoint
   }
