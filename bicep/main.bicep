@@ -41,6 +41,18 @@ module storage 'modules/storage/storage.bicep' = {
   }
 }
 
+module keyVault 'modules/vault/keyvault.bicep' = {
+  name: 'keyvault'
+  dependsOn: [
+    cognitives
+  ]
+  params: {
+    location: location
+    suffix: suffix
+    environment: environment
+  }
+}
+
 output frmEndpoint string = cognitives.outputs.frmEndpoint
 output frmKey string = cognitives.outputs.frmKey
 

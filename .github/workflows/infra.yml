@@ -1,6 +1,7 @@
 name: Create Azure Resources
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       location:
