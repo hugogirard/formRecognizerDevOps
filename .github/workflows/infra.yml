@@ -2,19 +2,20 @@ name: Create Azure Resources
 
 on:
   push:
-  workflow_dispatch:
-    inputs:
-      location:
-        description: 'The location where the resources will be created'
-        default: 'eastus'
-        required: true
+  # workflow_dispatch:
+  #   inputs:
+  #     location:
+  #       description: 'The location where the resources will be created'
+  #       default: 'eastus'
+  #       required: true
 
 jobs:
   create-dev-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
-      location: ${{ github.event.inputs.location }}
+      location: 'eastus'
+      #location: ${{ github.event.inputs.location }}
       environmentName: 'dev'
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
@@ -24,7 +25,8 @@ jobs:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-qa'
-      location: ${{ github.event.inputs.location }}
+      location: 'eastus'
+      #location: ${{ github.event.inputs.location }}
       environmentName: 'dev'
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
@@ -34,7 +36,8 @@ jobs:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-prod'
-      location: ${{ github.event.inputs.location }}
+      location: 'eastus'
+      #location: ${{ github.event.inputs.location }}
       environmentName: 'dev'
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
