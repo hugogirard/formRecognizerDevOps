@@ -1,0 +1,51 @@
+on:
+  workflow_call:
+    inputs:
+      resourceGroupName:
+        required: true
+        type: string
+      location:
+        required: true
+        type: string
+    environmentName:
+        required: true
+        type: string        
+    secrets:
+      azure_credentials:
+        required: true
+      subscriptionId:
+        required: true
+
+jobs:
+  create-azure-resources:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.azure_credentials }}  
+
+      - name: Create Resource Group
+        run: |
+          az group create -n ${{ inputs.resourceGroupName }} -l ${{ inputs.location }}
+
+      # Temporary step the bicep linter return an error today for the
+      # method PATCH for CORS on storage
+      - name: Convert to ARM template
+        run: |
+          bicep build ./bicep/main.bicep
+          
+          
+      - name: Deploy Azure Resources
+        id: armDeployment
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.subscriptionId }}
+          resourceGroupName: ${{ inputs.resourceGroupName }}
+          template: ./bicep/main.json
+          parameters: environment=${{ inputs.environmentName }}

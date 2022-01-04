@@ -13,32 +13,33 @@ on:
         required: true
 
 jobs:
-  create-azure-resources:
-    runs-on: ubuntu-latest
+  create-dev-environment:
+    #uses: 
+    # runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
+    # steps:
+    #   - uses: actions/checkout@v2
 
-      - name: Azure Login
-        uses: Azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}  
+    #   - name: Azure Login
+    #     uses: Azure/login@v1
+    #     with:
+    #       creds: ${{ secrets.AZURE_CREDENTIALS }}  
 
-      - name: Create Resource Group
-        run: |
-          az group create -n ${{ github.event.inputs.resourceGroupName }} -l ${{ github.event.inputs.location }}
+    #   - name: Create Resource Group
+    #     run: |
+    #       az group create -n ${{ github.event.inputs.resourceGroupName }} -l ${{ github.event.inputs.location }}
 
-      # Temporary step the bicep linter return an error today for the
-      # method PATCH for CORS on storage
-      - name: Convert to ARM template
-        run: |
-          bicep build ./bicep/main.bicep
+    #   # Temporary step the bicep linter return an error today for the
+    #   # method PATCH for CORS on storage
+    #   - name: Convert to ARM template
+    #     run: |
+    #       bicep build ./bicep/main.bicep
           
           
-      - name: Deploy Azure Resources
-        id: armDeployment
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-          resourceGroupName: ${{ github.event.inputs.resourceGroupName }}
-          template: ./bicep/main.json
+    #   - name: Deploy Azure Resources
+    #     id: armDeployment
+    #     uses: azure/arm-deploy@v1
+    #     with:
+    #       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+    #       resourceGroupName: ${{ github.event.inputs.resourceGroupName }}
+    #       template: ./bicep/main.json
