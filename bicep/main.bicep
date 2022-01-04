@@ -36,7 +36,7 @@ module cognitives 'modules/cognitives/form.bicep' = [for env in environments: {
 }]
 
 module storage 'modules/storage/storage.bicep' = [for env in environments: {
-  name: 'storage'
+  name: 'storage-${env}'
   params: {
     location: location
     suffix: suffix
