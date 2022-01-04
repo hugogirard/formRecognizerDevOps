@@ -59,3 +59,5 @@ resource secretStorageCnxString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' =
     value: strCnxString
   }
 }
+
+output keyvaultName string = keyvault.name

@@ -17,22 +17,26 @@ on:
         required: true
       spIdentity:
         required: true        
-    # outputs:
+    outputs:
     #   formRecognizerEndpoint:
     #     description: 'The form recognizer endpoint'
     #     value: ${{ jobs.create-azure-resources.outputs.formRecognizerEndpoint }}
     #   formRecognizerKey:
     #     description: 'The form recognizer key'
     #     value: ${{ jobs.create-azure-resources.outputs.formRecognizerKey }}
+      keyVaultName:
+        description: 'The name of the keyvault'
+        value: ${{ jobs.create-azure-resources.outputs.keyVaultName }}
 
 jobs:
   create-azure-resources:
     
     runs-on: ubuntu-latest
 
-    # outputs:
-    #   formRecognizerEndpoint: ${{ steps.armDeployment.outputs.frmEndpoint }}
-    #   formRecognizerKey: ${{ steps.armDeployment.outputs.frmKey }}
+    outputs:
+      # formRecognizerEndpoint: ${{ steps.armDeployment.outputs.frmEndpoint }}
+      # formRecognizerKey: ${{ steps.armDeployment.outputs.frmKey }}
+      keyVaultName: ${{ steps.armDeployment.outputs.keyVaultName }}
 
     steps:
 

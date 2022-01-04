@@ -1,21 +1,17 @@
 name: Create Azure Resources
 
-on:
-  push:
+on:  
   workflow_dispatch:
-  #   inputs:
-  #     location:
-  #       description: 'The location where the resources will be created'
-  #       default: 'eastus'
-  #       required: true
+
+env:
+  location: 'eastus'
 
 jobs:
   create-dev-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
-      location: 'eastus'
-      #location: ${{ github.event.inputs.location }}
+      location: ${{ env.location }}      
       environmentName: 'dev'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
@@ -26,8 +22,7 @@ jobs:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-qa'
-      location: 'eastus'
-      #location: ${{ github.event.inputs.location }}
+      location: ${{ env.location }}      
       environmentName: 'qa'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
@@ -38,10 +33,32 @@ jobs:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-prod'
-      location: 'eastus'
-      #location: ${{ github.event.inputs.location }}
+      location: ${{ env.location }}      
       environmentName: 'prod'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      spIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
+      spIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}      
+
+  write-vault-name:
+    needs: [create-dev-environment, create-qa-environment, create-prod-environment]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: KEYVAULT_DEV_NAME
+          value: ${{ needs.create-dev-environment.outputs.keyVaultName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: KEYVAULT_QA_NAME
+          value: ${{ needs.create-qa-environment.outputs.keyVaultName }}
+          pa_token: ${{ secrets.PA_TOKEN }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: KEYVAULT_PROD_NAME
+          value: ${{ needs.create-prod-environment.outputs.keyVaultName }}
+          pa_token: ${{ secrets.PA_TOKEN }}          

@@ -1,0 +1,25 @@
+name: Train model in DEV
+
+on:
+  workflow_dispatch:
+
+jobs:
+  train-model:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1.1
+        with:          
+          creds: ${{ secrets.SP_AZURE_CREDENTIALS }}          
+          enable-AzPSSession: false      
+
+      - uses: Azure/get-keyvault-secrets@v1
+        with:
+          keyvault: "myKeyVault"
+          secrets: 'mySecret1, mySecret2'
+        id: vaultSecrets      

@@ -60,3 +60,4 @@ module keyVault 'modules/vault/keyvault.bicep' = {
   }
 }
 
+output keyvaultName string = keyVault.outputs.keyvaultName
