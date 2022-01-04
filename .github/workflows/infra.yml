@@ -17,7 +17,7 @@ jobs:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
-      location: ${{ inputs.location }}
+      location: ${{ github.event.inputs.location }}
       environmentName: 'dev'
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
