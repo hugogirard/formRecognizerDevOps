@@ -42,4 +42,3 @@ jobs:
           subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
           resourceGroupName: ${{ github.event.inputs.resourceGroupName }}
           template: ./bicep/main.json
-          parameters: location=${{ github.event.inputs.location }}
