@@ -21,9 +21,10 @@
 
 param suffix string
 param location string
+param environment string
 
 // var strAcccountNameFunc = 'strf${suffix}'
-var strAccountNameDoc = 'strd${suffix}'
+var strAccountNameDoc = '${toLower(environment)}${suffix}'
 
 resource storageAccountDocument 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: strAccountNameDoc
@@ -32,7 +33,7 @@ resource storageAccountDocument 'Microsoft.Storage/storageAccounts@2021-04-01' =
     name: 'Standard_LRS'    
   }
   tags: {
-    'description': 'Document Storage'
+    'environment': environment
   }
   kind: 'StorageV2'
   properties: {
@@ -54,14 +55,14 @@ resource storageAccountDocument 'Microsoft.Storage/storageAccounts@2021-04-01' =
   }
 }
 
-resource containerDocuments 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {
+resource containerDocuments 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = if (environment == 'DEV') {
   name: '${storageAccountDocument.name}/default/documents'
   properties: {
     publicAccess: 'None'
   }
 }
 
-resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' = {
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' = if (environment == 'DEV') {
   name: '${storageAccountDocument.name}/default'
   properties: {
     cors: {
