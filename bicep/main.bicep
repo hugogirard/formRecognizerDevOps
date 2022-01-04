@@ -17,29 +17,41 @@
 *
 * DEMO POC - "AS IS"
 */
+
+param environment string
+
 var location = resourceGroup().location
 var suffix = uniqueString(resourceGroup().id)
 
-var environments = [
-  'DEV'
-  'QA'
-  'PROD'
-]
-
-module cognitives 'modules/cognitives/form.bicep' = [for env in environments: {
-  name: 'cognitives-${env}'
+module cognitives 'modules/cognitives/form.bicep' = {
+  name: 'cognitives-${environment}'
   params: {
     location: location
     suffix: suffix
-    environment: env
+    environment: environment
   }
-}]
+}
 
-module storage 'modules/storage/storage.bicep' = [for env in environments: {
-  name: 'storage-${env}'
-  params: {
-    location: location
-    suffix: suffix
-    environment: env
-  }
-}]
+// var environments = [
+//   'DEV'
+//   'QA'
+//   'PROD'
+// ]
+
+// module cognitives 'modules/cognitives/form.bicep' = [for env in environments: {
+//   name: 'cognitives-${env}'
+//   params: {
+//     location: location
+//     suffix: suffix
+//     environment: env
+//   }
+// }]
+
+// module storage 'modules/storage/storage.bicep' = [for env in environments: {
+//   name: 'storage-${env}'
+//   params: {
+//     location: location
+//     suffix: suffix
+//     environment: env
+//   }
+// }]

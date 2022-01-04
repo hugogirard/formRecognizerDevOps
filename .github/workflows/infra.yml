@@ -14,7 +14,15 @@ on:
 
 jobs:
   create-dev-environment:
-    #uses: 
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
+    with:
+      resourceGroupName: 'rg-form-recognizer-devops-dev'
+      location: ${{ inputs.location }}
+      environmentName: 'dev'
+    secrets:
+      azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
+      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+
     # runs-on: ubuntu-latest
 
     # steps:
