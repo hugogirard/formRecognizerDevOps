@@ -54,6 +54,9 @@ module keyVault 'modules/vault/keyvault.bicep' = {
     environmentName: environment
     frmKey: cognitives.outputs.frmKey
     frmRecognizerEndpoint: cognitives.outputs.frmEndpoint
+    strDocumentId: storage.outputs.strDocumentId
+    strDocumentName: storage.outputs.strDocumentName
+    strDocumentApiVersion: storage.outputs.strDocumentApiVersion
   }
 }
 
