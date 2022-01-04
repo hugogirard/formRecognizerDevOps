@@ -32,6 +32,7 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
       name: 'standard'
     }
     tenantId: subscription().tenantId
+    enableSoftDelete: false
   }
 }
 
