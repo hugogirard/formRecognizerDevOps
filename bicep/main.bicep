@@ -17,18 +17,32 @@
 *
 * DEMO POC - "AS IS"
 */
-
 var location = resourceGroup().location
 var suffix = uniqueString(resourceGroup().id)
 
+var environments = [
+  'DEV'
+  'QA'
+  'PROD'
+]
 
-module cognitives 'modules/cognitives/form.bicep' = {
-  name: 'cognitives'
+resource storageAcct 'Microsoft.Storage/storageAccounts@2021-06-01' = [for i in range(0, storageCount): {
+  name: '${i}storage${uniqueString(resourceGroup().id)}'
+  location: location
+  sku: {
+    name: 'Standard_LRS'
+  }
+  kind: 'Storage'
+}]
+
+module cognitives 'modules/cognitives/form.bicep' = [for env in environments: {
+  name: 'cognitives-${env}'
   params: {
     location: location
     suffix: suffix
+    environment: env
   }
-}
+}]
 
 module storage 'modules/storage/storage.bicep' = {
   name: 'storage'

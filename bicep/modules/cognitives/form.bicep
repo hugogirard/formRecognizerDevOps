@@ -21,14 +21,18 @@
 
 param location string
 param suffix string
+param environment string
 
-var frmName = 'frm-${suffix}'
+var frmName = 'frm-${toLower(environment)}-${suffix}'
 
 resource frmRecognizer 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
   name: frmName
   location: location
   sku: {
     name: 'S0'
+  }
+  tags: {
+    'environment': environment
   }
   kind: 'FormRecognizer'
   // identity: {

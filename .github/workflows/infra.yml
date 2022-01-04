@@ -24,6 +24,10 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}  
 
+      - name: Create Resource Group
+        run: |
+          az group create -n ${{ github.event.inputs.resourceGroupName }} -l ${{ github.event.inputs.location }}
+
       # Temporary step the bicep linter return an error today for the
       # method PATCH for CORS on storage
       - name: Convert to ARM template
