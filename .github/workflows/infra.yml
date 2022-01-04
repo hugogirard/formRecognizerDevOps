@@ -1,0 +1,41 @@
+name: Create Azure Resources
+
+on:
+  workflow_dispatch:
+    inputs:
+      resourceGroupName:
+        description: 'Name of the resource group'
+        default: 'rg-form-recognizer-devops'
+        required: true
+      location:
+        description: 'The location where the resources will be created'
+        default: 'eastus'
+        required: true
+
+jobs:
+  create-azure-resources:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  
+
+      # Temporary step the bicep linter return an error today for the
+      # method PATCH for CORS on storage
+      - name: Convert to ARM template
+        run: |
+          bicep build ./bicep/main.bicep
+          
+          
+      - name: Deploy Azure Resources
+        id: armDeployment
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ github.event.inputs.resourceGroupName }}
+          template: ./bicep/main.json
+          parameters: location=${{ github.event.inputs.location }}
