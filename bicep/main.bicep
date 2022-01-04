@@ -26,15 +26,6 @@ var environments = [
   'PROD'
 ]
 
-resource storageAcct 'Microsoft.Storage/storageAccounts@2021-06-01' = [for i in range(0, storageCount): {
-  name: '${i}storage${uniqueString(resourceGroup().id)}'
-  location: location
-  sku: {
-    name: 'Standard_LRS'
-  }
-  kind: 'Storage'
-}]
-
 module cognitives 'modules/cognitives/form.bicep' = [for env in environments: {
   name: 'cognitives-${env}'
   params: {
