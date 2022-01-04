@@ -3,10 +3,6 @@ name: Create Azure Resources
 on:
   workflow_dispatch:
     inputs:
-      resourceGroupName:
-        description: 'Name of the resource group'
-        default: 'rg-form-recognizer-devops'
-        required: true
       location:
         description: 'The location where the resources will be created'
         default: 'eastus'
@@ -14,7 +10,7 @@ on:
 
 jobs:
   create-dev-environment:
-    uses: hugogirard/formRecognizerDevOps/.github/templates/create-resources.yml@main
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
       location: ${{ github.event.inputs.location }}
@@ -23,31 +19,22 @@ jobs:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
 
-    # runs-on: ubuntu-latest
+  create-qa-environment:
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
+    with:
+      resourceGroupName: 'rg-form-recognizer-devops-qa'
+      location: ${{ github.event.inputs.location }}
+      environmentName: 'dev'
+    secrets:
+      azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
+      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
 
-    # steps:
-    #   - uses: actions/checkout@v2
-
-    #   - name: Azure Login
-    #     uses: Azure/login@v1
-    #     with:
-    #       creds: ${{ secrets.AZURE_CREDENTIALS }}  
-
-    #   - name: Create Resource Group
-    #     run: |
-    #       az group create -n ${{ github.event.inputs.resourceGroupName }} -l ${{ github.event.inputs.location }}
-
-    #   # Temporary step the bicep linter return an error today for the
-    #   # method PATCH for CORS on storage
-    #   - name: Convert to ARM template
-    #     run: |
-    #       bicep build ./bicep/main.bicep
-          
-          
-    #   - name: Deploy Azure Resources
-    #     id: armDeployment
-    #     uses: azure/arm-deploy@v1
-    #     with:
-    #       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-    #       resourceGroupName: ${{ github.event.inputs.resourceGroupName }}
-    #       template: ./bicep/main.json
+  create-prod-environment:
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
+    with:
+      resourceGroupName: 'rg-form-recognizer-devops-prod'
+      location: ${{ github.event.inputs.location }}
+      environmentName: 'dev'
+    secrets:
+      azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
+      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
