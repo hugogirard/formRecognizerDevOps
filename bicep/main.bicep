@@ -60,4 +60,6 @@ module keyVault 'modules/vault/keyvault.bicep' = {
   }
 }
 
+output formRecognizerEndpoint string = cognitives.outputs.frmEndpoint
+output formRecognizerKey string = cognitives.outputs.frmKey
 output keyvaultName string = keyVault.outputs.keyvaultName

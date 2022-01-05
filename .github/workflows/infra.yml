@@ -23,9 +23,6 @@ name: Create Azure Resources
 on:  
   workflow_dispatch:
           
-# env:
-#   location: 'eastus'
-
 jobs:
   create-dev-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -79,6 +76,49 @@ jobs:
 
       - name: Give SP Prod Access Vault
         run: az keyvault set-policy -n ${{ needs.create-prod-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}                
+  
+  create-deploy-azure-function:
+    needs: [create-dev-environment, create-qa-environment, create-prod-environment]
+    runs-on: ubuntu-latest
+
+    env:
+      RG_NAME: 'rg-form-recognizer-devops-utility'
+      LOCATION: 'eastus'
+
+    steps:    
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.azure_credentials }}  
+
+      - name: Create Resource Group
+        run: |
+          az group create -n ${{ env.RG_NAME }} -l ${{ env.LOCATION }}
+
+      - name: Replace tokens
+        uses: cschleiden/replace-tokens@v1.0
+        with:        
+          tokenPrefix: __        
+          tokenSuffix: __        
+          files: '["deploy.parameters.json"]'
+        env:
+          formRecognizerDevEndpoint: ${{ needs.create-dev-environment.outputs.formRecognizerEndpoint }}
+          formRecognizerQAEndpoint: ${{ needs.create-qa-environment.outputs.formRecognizerEndpoint }}
+          formRecognizerProdEndpoint: ${{ needs.create-prod-environment.outputs.formRecognizerEndpoint }}
+          formRecognizerDevKey: ${{ needs.create-dev-environment.outputs.formRecognizerKey }}
+          formRecognizerQAKey: ${{ needs.create-qa-environment.outputs.formRecognizerKey }}
+          formRecognizerProdKey: ${{ needs.create-prod-environment.outputs.formRecognizerKey  }}
+
+      - name: Deploy Azure Resources
+        id: armDeployment
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.subscriptionId }}
+          resourceGroupName: ${{ env.RG_NAME }}
+          template: ./bicep/utility.bicep
+          parameters: ./bicep/utility.parameters.json
 
   write-vault-name:
     needs: [create-dev-environment, create-qa-environment, create-prod-environment]
