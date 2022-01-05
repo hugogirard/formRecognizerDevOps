@@ -35,7 +35,7 @@ on:
         required: true
       subscriptionId:
         required: true
-      spIdentity:
+      admin_identity:
         required: true        
     outputs:
     #   formRecognizerEndpoint:
@@ -85,4 +85,4 @@ jobs:
           subscriptionId: ${{ secrets.subscriptionId }}
           resourceGroupName: ${{ inputs.resourceGroupName }}
           template: ./bicep/main.json
-          parameters: environment=${{ inputs.environmentName }} spIdentity=${{ secrets.spIdentity }}
+          parameters: environment=${{ inputs.environmentName }} adminIdentity=${{ secrets.admin_identity }}
