@@ -16,10 +16,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Azure Login
+        uses: Azure/login@v1.1
+        with:          
+          creds: ${{ secrets.AZURE_CREDENTIALS }}          
+          enable-AzPSSession: false     
+
       - name: Get Form Recognizer Ids
         run: |
-          var=$(az resource list -g ${{ env.RG-DEV }}  --query "[?tags.description == '${{ env.FORM_DEV_TAG }}'].[id]" -o tsv)
-          echo $var
+          echo "FORM_DEV_ID=$(az resource list -g ${{ env.RG-DEV }}  --query "[?tags.description == '${{ env.FORM_DEV_TAG }}'].[id]" -o tsv)" >> $GITHUB_ENV
+
+      - name: Echo environment variable
+        run: |
+          echo ${{ env.FORM_DEV_ID }}   
+          
 
   # destroy-resource-group:
     
