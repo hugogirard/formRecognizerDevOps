@@ -33,8 +33,9 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
   location: location
   kind: 'functionapp'
   properties: {
-    serverFarmId: serverFarm.id
+    serverFarmId: serverFarm.id    
     siteConfig: {
+      netFrameworkVersion: 'v6.0'
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
@@ -53,16 +54,8 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
           value: 'DefaultEndpointsProtocol=https;AccountName=${strAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(strAccountId, strAccountApiVersion).keys[0].value}'
         }
         {
-          name: 'BlobContainerName'
-          value: 'documents'
-        }
-        {
-          name: 'RetryMillisecondsPower'
-          value: '2'
-        }
-        {
-          name: 'RetryMillisecondsFactor'
-          value: '1000'
+          name: 'ModelContainer'
+          value: 'model'
         }
         {
           name: 'FormRecognizerDevEndpoint'
@@ -94,7 +87,7 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
-          value: '~3'
+          value: '~4'
         }
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
@@ -108,3 +101,5 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
     }
   }
 }
+
+output functionName string = function.name
