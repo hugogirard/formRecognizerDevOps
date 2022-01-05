@@ -33,6 +33,7 @@ resource frmRecognizer 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
   }
   tags: {
     'environment': environment
+    'description': 'frm-devops-demo-tag'
   }
   kind: 'FormRecognizer'
   // identity: {

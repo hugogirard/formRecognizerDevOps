@@ -19,7 +19,7 @@
 */
 
 param environment string
-param spIdentity string
+param adminIdentity string
 
 var location = resourceGroup().location
 var suffix = uniqueString(resourceGroup().id)
@@ -50,7 +50,7 @@ module keyVault 'modules/vault/keyvault.bicep' = {
   params: {
     location: location
     suffix: suffix
-    spIdentity: spIdentity
+    adminIdentity: adminIdentity
     environmentName: environment
     frmKey: cognitives.outputs.frmKey
     frmRecognizerEndpoint: cognitives.outputs.frmEndpoint
