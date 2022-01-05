@@ -7,11 +7,11 @@ env:
   RG-DEV: 'rg-form-recognizer-devops-dev'
   RG-QA: 'rg-form-recognizer-devops-qa'
   RG-PROD: 'rg-form-recognizer-devops-prod'
-  FORM_DEV_TAG: 'frm-devops-demo-tag-${{ secrets.SUBSCRIPTION_ID}}'
+  FORM_TAG: 'frm-devops-demo-tag-${{ secrets.SUBSCRIPTION_ID}}'
 
 jobs:
 
-  get-id-form-recognizer:
+  destroy-resource-group:
 
     runs-on: ubuntu-latest
 
@@ -25,22 +25,23 @@ jobs:
 
       - name: Get Form Recognizer Ids
         run: |
-          echo "FORM_DEV_ID=$(az resource list -g ${{ env.RG-DEV }}  --query "[?tags.description == '${{ env.FORM_DEV_TAG }}'].[id]" -o tsv)" >> $GITHUB_ENV
+          echo "FORM_DEV_ID=$(az resource list -g ${{ env.RG-DEV }}  --query "[?tags.description == '${{ env.FORM_TAG }}'].[id]" -o tsv)" >> $GITHUB_ENV
+          echo "FORM_QA_ID=$(az resource list -g ${{ env.RG-QA }}  --query "[?tags.description == '${{ env.FORM_TAG }}'].[id]" -o tsv)" >> $GITHUB_ENV
+          echo "FORM_PROD_ID=$(az resource list -g ${{ env.RG-PROD }}  --query "[?tags.description == '${{ env.FORM_TAG }}'].[id]" -o tsv)" >> $GITHUB_ENV
   
-  destroy-resource-group:
-    needs: get-id-form-recognizer
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - name: Echo environment variable
+      - name: Destroy resource group
         run: |
-          echo ${{ env.FORM_DEV_ID }}   
-              
-  #     - name: Destroy resource group
-  #       run: |
-  #        az group delete -n ${{ env.RG-DEV }}
-  #        az group delete -n ${{ env.RG-QA }}
-  #        az group delete -n ${{ env.RG-PROD }}
-  
+         az group delete -n ${{ env.RG-DEV }}
+         az group delete -n ${{ env.RG-QA }}
+         az group delete -n ${{ env.RG-PROD }}
+
+      - name: Remove soft delete form Recognizer
+        run: |
+           az resource delete --ids ${{ env.FORM_DEV_ID }}
+           az resource delete --ids ${{ env.FORM_QA_ID }}
+           az resource delete --ids ${{ env.FORM_PROD_ID }}
+
+
+
+
     
