@@ -31,9 +31,9 @@ jobs:
   
       - name: Destroy resource group
         run: |
-         az group delete -n ${{ env.RG-DEV }}
-         az group delete -n ${{ env.RG-QA }}
-         az group delete -n ${{ env.RG-PROD }}
+         az group delete -n ${{ env.RG-DEV }} --yes
+         az group delete -n ${{ env.RG-QA }} --yes
+         az group delete -n ${{ env.RG-PROD }} --yes
 
       - name: Remove soft delete form Recognizer
         run: |
