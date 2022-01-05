@@ -65,6 +65,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.azure_credentials }}  
+
       - name: Give SP Dev Access Vault
         run: az keyvault set-policy -n ${{ needs.create-dev-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
