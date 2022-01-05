@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "formRecognizerDevEndpoint": {
+            "value": "__formRecognizerDevEndpoint__"
+        },
+        "formRecognizerQAEndpoint": {
+            "value": "__formRecognizerQAEndpoint__"
+        },
+        "formRecognizerProdEndpoint": {
+            "value": "__formRecognizerProdEndpoint__"
+        },
+        "formRecognizerDevKey": {
+            "value": "__formRecognizerDevKey__"
+        },
+        "formRecognizerQAKey": {
+            "value": "__formRecognizerQAKey__"
+        },
+        "formRecognizerProdKey": {
+            "value": "__formRecognizerProdKey__"
+        }
+    }
+}
