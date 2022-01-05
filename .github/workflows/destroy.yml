@@ -7,7 +7,7 @@ env:
   RG-DEV: 'rg-form-recognizer-devops-dev'
   RG-QA: 'rg-form-recognizer-devops-qa'
   RG-PROD: 'rg-form-recognizer-devops-prod'
-  FORM_DEV_TAG: 'frm-devops-demo-tag-$secrets.SUBSCRIPTION_ID'
+  FORM_DEV_TAG: 'frm-devops-demo-tag-${{ secrets.SUBSCRIPTION_ID}}'
 
 jobs:
 
