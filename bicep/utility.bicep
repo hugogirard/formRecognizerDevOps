@@ -6,6 +6,8 @@ param formRecognizerDevKey string
 param formRecognizerQAKey string
 param formRecognizerProdKey string
 
+param devStorageCnxString string
+
 var location = resourceGroup().location
 var suffix = uniqueString(resourceGroup().id)
 
@@ -41,6 +43,7 @@ module function 'modules/function/function.bicep' = {
     strAccountId: storage.outputs.strAccountId
     strAccountName: storage.outputs.strAccountName
     suffix: suffix
+    devStorageCnxString: devStorageCnxString
   }
 }
 

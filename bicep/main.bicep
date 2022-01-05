@@ -18,27 +18,27 @@
 * DEMO POC - "AS IS"
 */
 
-param environment string
+param environmentName string
 param adminIdentity string
 
 var location = resourceGroup().location
 var suffix = uniqueString(resourceGroup().id)
 
 module cognitives 'modules/cognitives/form.bicep' = {
-  name: 'cognitives-${environment}'
+  name: 'cognitives-${environmentName}'
   params: {
     location: location
     suffix: suffix
-    environment: environment
+    environment: environmentName
   }
 }
 
 module storage 'modules/storage/storage.bicep' = {
-  name: 'storage-${environment}'
+  name: 'storage-${environmentName}'
   params: {
     location: location
     suffix: suffix
-    environment: environment
+    environment: environmentName
   }
 }
 
@@ -51,7 +51,7 @@ module keyVault 'modules/vault/keyvault.bicep' = {
     location: location
     suffix: suffix
     adminIdentity: adminIdentity
-    environmentName: environment
+    environmentName: environmentName
     frmKey: cognitives.outputs.frmKey
     frmRecognizerEndpoint: cognitives.outputs.frmEndpoint
     strDocumentId: storage.outputs.strDocumentId

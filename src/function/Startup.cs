@@ -9,7 +9,7 @@ public class Startup : FunctionsStartup
 {
     public override void Configure(IFunctionsHostBuilder builder)
     {
-        var blobService = new BlobServiceClient(Environment.GetEnvironmentVariable("AzureWebJobsStorage"));
+        var blobService = new BlobServiceClient(Environment.GetEnvironmentVariable("DevStorageCnxString"));
         var containerClient = blobService.GetBlobContainerClient(Environment.GetEnvironmentVariable("ModelContainer"));
 
         builder.Services.AddSingleton<IFormClientFactory,FormClientFactory>();

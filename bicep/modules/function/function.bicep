@@ -16,6 +16,8 @@ param formRecognizerDevKey string
 param formRecognizerQAKey string
 param formRecognizerProdKey string
 
+param devStorageCnxString string
+
 var appServiceName = 'func-plan-${suffix}'
 var functionAppName = 'func-form-${suffix}'
 
@@ -52,6 +54,10 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
           value: 'DefaultEndpointsProtocol=https;AccountName=${strAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(strAccountId, strAccountApiVersion).keys[0].value}'
+        }
+        {
+          name: 'DevStorageCnxString'
+          value: devStorageCnxString
         }
         {
           name: 'ModelContainer'

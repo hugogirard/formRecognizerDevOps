@@ -99,6 +99,12 @@ jobs:
         run: |
           az group create -n ${{ env.RG_NAME }} -l ${{ env.LOCATION }}
 
+      - uses: Azure/get-keyvault-secrets@v1
+        id: secretVault
+        with:
+          keyvault: ${{ needs.create-dev-environment.outputs.keyvaultName }}
+          secrets: 'storageCnxString'
+
       - name: Replace tokens
         uses: cschleiden/replace-tokens@v1.0
         with:        
@@ -111,7 +117,8 @@ jobs:
           formRecognizerProdEndpoint: ${{ needs.create-prod-environment.outputs.formRecognizerEndpoint }}
           formRecognizerDevKey: ${{ needs.create-dev-environment.outputs.formRecognizerKey }}
           formRecognizerQAKey: ${{ needs.create-qa-environment.outputs.formRecognizerKey }}
-          formRecognizerProdKey: ${{ needs.create-prod-environment.outputs.formRecognizerKey  }}
+          formRecognizerProdKey: ${{ needs.create-prod-environment.outputs.formRecognizerKey }}
+          devStorageCnxString: ${{ steps.secretVault.storageCnxString }}
 
       - name: Deploy Azure Resources
         id: armDeployment

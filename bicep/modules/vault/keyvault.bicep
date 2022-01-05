@@ -73,7 +73,7 @@ resource secretKey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
 }
 
 resource secretStorageCnxString 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = { 
-  name: 'frmCnxString'
+  name: 'storageCnxString'
   parent: keyvault
   properties: {
     value: strCnxString

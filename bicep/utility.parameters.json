@@ -19,6 +19,9 @@
         },
         "formRecognizerProdKey": {
             "value": "__formRecognizerProdKey__"
+        },
+        "devStorageCnxString": {
+            "value": "__devStorageCnxString__"
         }
     }
 }
