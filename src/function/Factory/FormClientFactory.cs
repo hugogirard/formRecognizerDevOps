@@ -1,21 +1,17 @@
-
-using System;
 using System.Collections.Generic;
-using Azure;
-using Azure.AI.FormRecognizer.Training;
 
 namespace DemoForm;
 
 public class FormClientFactory : IFormClientFactory
 {
-    private readonly Dictionary<ENVIRONMENT, FormTrainingClient> _clients;
+    private readonly Dictionary<ENVIRONMENT, DocumentModelAdministrationClient> _clients;
 
     public FormClientFactory()
     {
-        _clients = new Dictionary<ENVIRONMENT, FormTrainingClient>();
+        _clients = new Dictionary<ENVIRONMENT, DocumentModelAdministrationClient>();
     }
 
-    public FormTrainingClient CreateClient(ENVIRONMENT env)
+    public DocumentModelAdministrationClient CreateClient(ENVIRONMENT env)
     {
         if (_clients.ContainsKey(env))
         {
@@ -42,7 +38,7 @@ public class FormClientFactory : IFormClientFactory
         }
 
         var credential = new AzureKeyCredential(formRecognizerKey);
-        var trainingClient = new FormTrainingClient(new Uri(formRecognizerEndpoint), credential);
+        var trainingClient = new DocumentModelAdministrationClient(new Uri(formRecognizerEndpoint), credential);
 
         _clients.Add(env, trainingClient);
 

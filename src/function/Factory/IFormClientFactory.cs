@@ -1,8 +1,6 @@
-using Azure.AI.FormRecognizer.Training;
-
 namespace DemoForm;
 
 public interface IFormClientFactory
 {
-    FormTrainingClient CreateClient(ENVIRONMENT env);
+    DocumentModelAdministrationClient CreateClient(ENVIRONMENT env);
 }
