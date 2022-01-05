@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo ${{ env.FORM_DEV_TAG }}
-      # - name: Get Form Recognizer Ids
-      #   run: |
-      #     az resource list -g ${{ env.RG-DEV }}  --query "[?tags.description == 'frm-devops-demo-tag-abd9e36a-555c-4de4-a75d-cfc1682d67b0'].[id]" -o tsv
+      - name: Get Form Recognizer Ids
+        run: |
+          var=$(az resource list -g ${{ env.RG-DEV }}  --query "[?tags.description == ${{ env.FORM_DEV_TAG }}].[id]" -o tsv)
+          echo $var
 
   # destroy-resource-group:
     
