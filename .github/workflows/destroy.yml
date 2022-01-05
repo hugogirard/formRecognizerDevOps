@@ -26,17 +26,17 @@ jobs:
       - name: Get Form Recognizer Ids
         run: |
           echo "FORM_DEV_ID=$(az resource list -g ${{ env.RG-DEV }}  --query "[?tags.description == '${{ env.FORM_DEV_TAG }}'].[id]" -o tsv)" >> $GITHUB_ENV
+  
+  destroy-resource-group:
+    needs: get-id-form-recognizer
+    runs-on: ubuntu-latest
+
+    steps:
 
       - name: Echo environment variable
         run: |
           echo ${{ env.FORM_DEV_ID }}   
-          
-
-  # destroy-resource-group:
-    
-  #   runs-on: ubuntu-latest
-
-  #   steps:
+              
   #     - name: Destroy resource group
   #       run: |
   #        az group delete -n ${{ env.RG-DEV }}
