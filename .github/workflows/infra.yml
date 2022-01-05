@@ -16,7 +16,7 @@ jobs:
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      spIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
+      adminIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
   create-qa-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -27,7 +27,7 @@ jobs:
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      spIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
+      adminIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
   create-prod-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -38,7 +38,7 @@ jobs:
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      spIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}      
+      adminIdentity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}      
 
   write-vault-name:
     needs: [create-dev-environment, create-qa-environment, create-prod-environment]
