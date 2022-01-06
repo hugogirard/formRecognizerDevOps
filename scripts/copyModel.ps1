@@ -42,7 +42,7 @@ try {
         "destinationEnvironment"="$destinationEnvironment"
     } | ConvertTo-Json
     
-    $response = Invoke-WebRequest -Uri $actionUrl -Method 'Post' -Headers $header
+    $response = Invoke-WebRequest -Uri $functionEndpoint -Method 'Post' -Headers $header
     
     if ($response.StatusCode -ne 200) {
         throw "Error, statusCode: $response.StatusCode"
