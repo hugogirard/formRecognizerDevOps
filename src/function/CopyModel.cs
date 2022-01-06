@@ -20,38 +20,52 @@ public class CopyModel
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
     {
 
-        CopyModelParameter copyModel;
-        if (req.Body != null)
+        try
         {
-            using (var sr = new StreamReader(req.Body))
+            CopyModelParameter copyModel;
+            if (req.Body != null)
             {
-                string requestBody = await sr.ReadToEndAsync();
-                copyModel = JsonConvert.DeserializeObject<CopyModelParameter>(requestBody);
+                using (var sr = new StreamReader(req.Body))
+                {
+                    string requestBody = await sr.ReadToEndAsync();
+                    copyModel = JsonConvert.DeserializeObject<CopyModelParameter>(requestBody);
+                }
+
+                var validator = new CopyModelParameterValidator();
+                var result = validator.Validate(copyModel);
+
+                if (!result.IsValid)
+                    return new BadRequestObjectResult("The parameters are invalid");
+
+                var sourceClient = _formClientFactory.CreateClient(copyModel.SourceEnvironment);
+                var targetClient = _formClientFactory.CreateClient(copyModel.DestinationEnvironment);
+
+                // Get info of the model to copy (description)
+                var response = await sourceClient.GetModelAsync(copyModel.SourceModelId);
+
+                if (!response.GetRawResponse().Status.IsSuccessStatusCode())
+                    return new NotFoundObjectResult("Cannot get the info of the source model");
+
+                CopyAuthorization copyAuthorization = await targetClient.GetCopyAuthorizationAsync(response.Value.ModelId,response.Value.Description);
+
+                CopyModelOperation newModelOperation = await sourceClient.StartCopyModelAsync(copyModel.SourceModelId, copyAuthorization);
+
+                await newModelOperation.WaitForCompletionAsync();
+                DocumentModel newModel = newModelOperation.Value;
+
+                return new OkObjectResult(newModel);
+
             }
-
-            var validator = new CopyModelParameterValidator();
-            var result = validator.Validate(copyModel);
-
-            if (!result.IsValid)
-                return new BadRequestObjectResult("The parameters are invalid");
-
-            var targetClient = _formClientFactory.CreateClient(copyModel.DestinationEnvironment);
-            CopyAuthorization copyAuthorization = await targetClient.GetCopyAuthorizationAsync();
-
-            var sourceClient = _formClientFactory.CreateClient(copyModel.SourceEnvironment);
-            CopyModelOperation newModelOperation = await sourceClient.StartCopyModelAsync(copyModel.SourceModelId, copyAuthorization);
-
-            await newModelOperation.WaitForCompletionAsync();
-            DocumentModel newModel = newModelOperation.Value;
-
-            return new OkObjectResult(newModel);
-
+            else
+            {
+                return new BadRequestObjectResult("The CopyModel parameters cannot be null");
+            }
         }
-        else 
+        catch (Exception ex)
         {
-            return new BadRequestObjectResult("The CopyModel parameters cannot be null");
+            _logger.LogError(ex.Message, ex);
+            return new ObjectResult("Internal Server Error") { StatusCode = 500 };
         }
-
     }    
 }
 
