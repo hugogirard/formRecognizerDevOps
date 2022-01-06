@@ -55,14 +55,7 @@ resource storageAccountDocument 'Microsoft.Storage/storageAccounts@2021-04-01' =
   }
 }
 
-resource containerDocuments 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = if (environment == 'DEV') {
-  name: '${storageAccountDocument.name}/default/documents'
-  properties: {
-    publicAccess: 'None'
-  }
-}
-
-resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' = if (environment == 'DEV') {
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' = {
   name: '${storageAccountDocument.name}/default'
   properties: {
     cors: {
