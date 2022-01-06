@@ -22,9 +22,9 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$modelId,
     [Parameter(Mandatory = $true)]
-    [integer]$sourceEnvironment,    
+    [int]$sourceEnvironment,    
     [Parameter(Mandatory = $true)]
-    [integer]$destinationEnvironment,        
+    [int]$destinationEnvironment,        
     [Parameter(Mandatory = $true)]
     [string]$functionEndpoint
 )
