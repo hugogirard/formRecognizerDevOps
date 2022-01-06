@@ -9,7 +9,7 @@ on:
         type: string
 
 jobs:
-  deployment:
+  validateDEV:
     name: Validate Model Exists
     environment:
       name: DEV
@@ -22,3 +22,17 @@ jobs:
         run: |
           ./scripts/validateModel.ps1 -modelId ${{ github.event.inputs.modelId }} -endpoint ${{ secrets.FUNCTION_VALIDATE_ENDPOINT }} -code ${{ secrets.VALIDATE_FUNC_CODE }}
         shell: pwsh
+
+  deploymentQA:    
+    environment:
+      name: QA
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run Azure PowerShell script validate
+        shell: pwsh 
+        run: |
+          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 0 -destinationEnvironment 1 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL }}
+               

@@ -21,49 +21,32 @@
 param(    
     [Parameter(Mandatory = $true)]
     [string]$modelId,
-    [Parameter]
-    [string]$modelDescription,
     [Parameter(Mandatory = $true)]
-    [string]$frmRecognizerSourceEndpoint,
+    [integer]$sourceEnvironment,    
     [Parameter(Mandatory = $true)]
-    [string]$frmRecognizerSourceKey,
+    [integer]$destinationEnvironment,        
     [Parameter(Mandatory = $true)]
-    [string]$frmRecognizerDestinationEndpoint,
-    [Parameter(Mandatory = $true)]
-    [string]$frmRecognizerDestinationKey    
+    [string]$functionEndpoint
 )
 
-try {
-    $actionUrl = "https://$frmRecognizerDestinationEndpoint/formrecognizer/documentModels:authorizeCopy?api-version=2021-09-30-preview"
-    # $deleteUrl = "https://$frmRecognizerDestinationEndpoint/formrecognizer/documentModels/$modelId?api-version=2021-09-30-preview"
-    
-    # $header = @{
-    #     "Ocp-Apim-Subscription-Key"="$frmRecognizerDestinationKey"
-    # } 
-    
-    # $response = Invoke-WebRequest -Uri $deleteUrl -Method 'Delete' -Headers $header
-    
+try {    
     Write-Output $response
     
-    $header = @{
-      "Ocp-Apim-Subscription-Key"="$frmRecognizerDestinationKey"
+    $header = @{      
       "Content-Type"="application/json"
     } 
     
     $body= @{
-        "modelId"="$modelId"
-        "description"="$modelDescription"
+        "sourceModelId"="$modelId"
+        "sourceEnvironment"="$sourceEnvironment"
+        "destinationEnvironment"="$destinationEnvironment"
     } | ConvertTo-Json
     
     $response = Invoke-WebRequest -Uri $actionUrl -Method 'Post' -Headers $header
     
-    if ($response.StatusCode -eq 200) {
-        $content = $response.Content | ConvertFrom-Json
-        Write-Output $content.accessToken
-        $actionUrl = "https://$frmRecognizerDestinationEndpoint/formrecognizer/documentModels/{modelId}:copyTo?api-version=2021-09-30-preview"
-    } else {
-        throw "Cannot get access token for copy, statusCode: $response.StatusCode"
-    }    
+    if ($response.StatusCode -ne 200) {
+        throw "Error, statusCode: $response.StatusCode"
+    }
 }
 catch {
     Write-Log $PSItem.ToString()
