@@ -26,6 +26,7 @@ jobs:
   deploymentQA:    
     environment:
       name: QA
+    needs: validateDEV
     runs-on: ubuntu-latest
 
     steps:
@@ -35,4 +36,18 @@ jobs:
         shell: pwsh 
         run: |
           ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 0 -destinationEnvironment 1 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL }}
+
+  deploymentPROD:    
+    environment:
+      name: PROD
+    needs: deploymentQA
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run Azure PowerShell script validate
+        shell: pwsh 
+        run: |
+          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 1 -destinationEnvironment 2 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL }}          
                
