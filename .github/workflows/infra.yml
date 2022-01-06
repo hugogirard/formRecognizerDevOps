@@ -124,13 +124,13 @@ jobs:
           tokenSuffix: __        
           files: '["bicep/utility.parameters.json"]'
         env:
-          formRecognizerDevEndpoint: ${{ steps.devSecretVault.frmEndpoint }}
-          formRecognizerQAEndpoint: ${{ steps.qaSecretVault.frmEndpoint }}
-          formRecognizerProdEndpoint: ${{ steps.prodSecretVault.frmEndpoint }}
-          formRecognizerDevKey: ${{ steps.devSecretVault.frmKey }}
-          formRecognizerQAKey: ${{ steps.qaSecretVault.frmKey }}
-          formRecognizerProdKey: ${{ steps.prodSecretVault.frmKey}}
-          devStorageCnxString: ${{ steps.devSecretVault.storageCnxString }}
+          formRecognizerDevEndpoint: ${{ steps.devSecretVault.outputs.frmEndpoint }}
+          formRecognizerQAEndpoint: ${{ steps.qaSecretVault.outputs.frmEndpoint }}
+          formRecognizerProdEndpoint: ${{ steps.prodSecretVault.outputs.frmEndpoint }}
+          formRecognizerDevKey: ${{ steps.devSecretVault.outputs.frmKey }}
+          formRecognizerQAKey: ${{ steps.qaSecretVault.outputs.frmKey }}
+          formRecognizerProdKey: ${{ steps.prodSecretVault.outputs.frmKey}}
+          devStorageCnxString: ${{ steps.devSecretVault.outputs.storageCnxString }}
 
       - name: Deploy Azure Resources
         id: armDeployment
