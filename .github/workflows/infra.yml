@@ -110,7 +110,7 @@ jobs:
         with:        
           tokenPrefix: __        
           tokenSuffix: __        
-          files: '["deploy.parameters.json"]'
+          files: '["bicep/utility.parameters.json"]'
         env:
           formRecognizerDevEndpoint: ${{ needs.create-dev-environment.outputs.formRecognizerEndpoint }}
           formRecognizerQAEndpoint: ${{ needs.create-qa-environment.outputs.formRecognizerEndpoint }}
@@ -147,25 +147,25 @@ jobs:
           app-name: ${{ steps.armDeployment.outputs.functionName }}
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'                  
 
-  write-vault-name:
-    needs: [create-dev-environment, create-qa-environment, create-prod-environment]
-    runs-on: ubuntu-latest
+  # write-vault-name:
+  #   needs: [create-dev-environment, create-qa-environment, create-prod-environment]
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: gliech/create-github-secret-action@v1
-        with:
-          name: KEYVAULT_DEV_NAME
-          value: ${{ needs.create-dev-environment.outputs.keyVaultName }}
-          pa_token: ${{ secrets.PA_TOKEN }}
+  #   steps:
+  #     - uses: gliech/create-github-secret-action@v1
+  #       with:
+  #         name: KEYVAULT_DEV_NAME
+  #         value: ${{ needs.create-dev-environment.outputs.keyVaultName }}
+  #         pa_token: ${{ secrets.PA_TOKEN }}
 
-      - uses: gliech/create-github-secret-action@v1
-        with:
-          name: KEYVAULT_QA_NAME
-          value: ${{ needs.create-qa-environment.outputs.keyVaultName }}
-          pa_token: ${{ secrets.PA_TOKEN }}
+  #     - uses: gliech/create-github-secret-action@v1
+  #       with:
+  #         name: KEYVAULT_QA_NAME
+  #         value: ${{ needs.create-qa-environment.outputs.keyVaultName }}
+  #         pa_token: ${{ secrets.PA_TOKEN }}
 
-      - uses: gliech/create-github-secret-action@v1
-        with:
-          name: KEYVAULT_PROD_NAME
-          value: ${{ needs.create-prod-environment.outputs.keyVaultName }}
-          pa_token: ${{ secrets.PA_TOKEN }}          
+  #     - uses: gliech/create-github-secret-action@v1
+  #       with:
+  #         name: KEYVAULT_PROD_NAME
+  #         value: ${{ needs.create-prod-environment.outputs.keyVaultName }}
+  #         pa_token: ${{ secrets.PA_TOKEN }}          
