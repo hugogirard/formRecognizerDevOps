@@ -4,14 +4,14 @@ namespace DemoForm;
 
 public class FormClientFactory : IFormClientFactory
 {
-    private readonly Dictionary<ENVIRONMENT, DocumentModelAdministrationClient> _clients;
+    private readonly Dictionary<FORM_RECOGNIZER_ENVIRONMENT, DocumentModelAdministrationClient> _clients;
 
     public FormClientFactory()
     {
-        _clients = new Dictionary<ENVIRONMENT, DocumentModelAdministrationClient>();
+        _clients = new Dictionary<FORM_RECOGNIZER_ENVIRONMENT, DocumentModelAdministrationClient>();
     }
 
-    public DocumentModelAdministrationClient CreateClient(ENVIRONMENT env)
+    public DocumentModelAdministrationClient CreateClient(FORM_RECOGNIZER_ENVIRONMENT env)
     {
         if (_clients.ContainsKey(env))
         {
@@ -23,11 +23,11 @@ public class FormClientFactory : IFormClientFactory
 
         switch (env)
         {
-            case ENVIRONMENT.DEV:
+            case FORM_RECOGNIZER_ENVIRONMENT.DEV:
                 formRecognizerEndpoint = Environment.GetEnvironmentVariable("FormRecognizerDevEndpoint");
                 formRecognizerKey = Environment.GetEnvironmentVariable("FormRecognizerDevKey");
                 break;
-            case ENVIRONMENT.QA:
+            case FORM_RECOGNIZER_ENVIRONMENT.QA:
                 formRecognizerEndpoint = Environment.GetEnvironmentVariable("FormRecognizerQaEndpoint");
                 formRecognizerKey = Environment.GetEnvironmentVariable("FormRecognizerQaKey");
                 break;

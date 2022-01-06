@@ -4,7 +4,7 @@ public class Constant
 {
 }
 
-public enum ENVIRONMENT 
+public enum FORM_RECOGNIZER_ENVIRONMENT 
 {
     DEV = 0,
     QA,

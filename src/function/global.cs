@@ -14,3 +14,4 @@ global using System;
 global using Azure.AI.FormRecognizer.DocumentAnalysis;
 global using Azure;
 global using Newtonsoft.Json;
+global using FluentValidation;
