@@ -1,18 +1,24 @@
-# name: Migrate modelId
+name: Migrate modelId
 
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       modelId:
-#         required: true
-#         description: 'The modelId to copy from DEV to other environment'
-#         type: string
+on:
+  workflow_dispatch:
+    inputs:
+      modelId:
+        required: true
+        description: 'The modelId to copy from DEV to other environment'
+        type: string
 
-# jobs:
-#   validate-model-present-in-dev:
+jobs:
+  deployment:
+    name: Validate Model Exists
+    environment:
+      name: DEV
+    runs-on: ubuntu-latest
 
-#     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
-#     steps:
-#       - name: validateModelExists
-#         run: |
+      - name: Run Azure PowerShell script validate
+        run: |
+          ./scripts/validateModel.ps1 -modelId ${{ inputs.modelId }} -endpoint ${{ secrets.FUNCTION_VALIDATE_ENDPOINT }} -code ${{ secrets.VALIDATE_FUNC_CODE }}
+        shell: pwsh
