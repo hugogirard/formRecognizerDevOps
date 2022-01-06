@@ -23,7 +23,8 @@ jobs:
           ./scripts/validateModel.ps1 -modelId ${{ github.event.inputs.modelId }} -endpoint ${{ secrets.FUNCTION_VALIDATE_ENDPOINT }} -code ${{ secrets.VALIDATE_FUNC_CODE }}
         shell: pwsh
 
-  deploymentQA:    
+  deploymentQA:
+    name: Deployment in QA    
     environment:
       name: QA
     needs: validateDEV
@@ -37,7 +38,8 @@ jobs:
         run: |
           ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 0 -destinationEnvironment 1 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL }}
 
-  deploymentPROD:    
+  deploymentPROD:
+    name: Deployment in PROD
     environment:
       name: PROD
     needs: deploymentQA

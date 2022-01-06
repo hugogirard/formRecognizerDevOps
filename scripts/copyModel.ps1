@@ -49,7 +49,6 @@ try {
     }
 }
 catch {
-    Write-Log $PSItem.ToString()
     throw $PSItem
 }
 
