@@ -100,10 +100,22 @@ jobs:
           az group create -n ${{ env.RG_NAME }} -l ${{ env.LOCATION }}
 
       - uses: Azure/get-keyvault-secrets@v1
-        id: secretVault
+        id: devSecretVault
         with:
           keyvault: ${{ needs.create-dev-environment.outputs.keyvaultName }}
-          secrets: 'storageCnxString'
+          secrets: 'storageCnxString, frmEndpoint, frmKey'
+
+      - uses: Azure/get-keyvault-secrets@v1
+        id: qaSecretVault
+        with:
+          keyvault: ${{ needs.create-qa-environment.outputs.keyvaultName }}
+          secrets: 'storageCnxString, frmEndpoint, frmKey'
+
+      - uses: Azure/get-keyvault-secrets@v1
+        id: prodSecretVault
+        with:
+          keyvault: ${{ needs.create-prod-environment.outputs.keyvaultName }}
+          secrets: 'storageCnxString, frmEndpoint, frmKey'          
 
       - name: Replace tokens
         uses: cschleiden/replace-tokens@v1.0
@@ -112,13 +124,13 @@ jobs:
           tokenSuffix: __        
           files: '["bicep/utility.parameters.json"]'
         env:
-          formRecognizerDevEndpoint: ${{ needs.create-dev-environment.outputs.formRecognizerEndpoint }}
-          formRecognizerQAEndpoint: ${{ needs.create-qa-environment.outputs.formRecognizerEndpoint }}
-          formRecognizerProdEndpoint: ${{ needs.create-prod-environment.outputs.formRecognizerEndpoint }}
-          formRecognizerDevKey: ${{ needs.create-dev-environment.outputs.formRecognizerKey }}
-          formRecognizerQAKey: ${{ needs.create-qa-environment.outputs.formRecognizerKey }}
-          formRecognizerProdKey: ${{ needs.create-prod-environment.outputs.formRecognizerKey }}
-          devStorageCnxString: ${{ steps.secretVault.storageCnxString }}
+          formRecognizerDevEndpoint: ${{ steps.devSecretVault.frmEndpoint }}
+          formRecognizerQAEndpoint: ${{ steps.qaSecretVault.frmEndpoint }}
+          formRecognizerProdEndpoint: ${{ steps.prodSecretVault.frmEndpoint }}
+          formRecognizerDevKey: ${{ steps.devSecretVault.frmKey }}
+          formRecognizerQAKey: ${{ steps.qaSecretVault.frmKey }}
+          formRecognizerProdKey: ${{ steps.prodSecretVault.frmKey}}
+          devStorageCnxString: ${{ steps.devSecretVault.storageCnxString }}
 
       - name: Deploy Azure Resources
         id: armDeployment
