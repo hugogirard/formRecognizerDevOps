@@ -31,3 +31,9 @@ This is the flow of our CI/CD.
 5) The model is tested and ready to migrate to production, from there an approver need to approve the model to be copied from QA to Production.
 6) Once approved, the model is copied from QA to Production.
 
+# How to execute this sample
+
+The first thing you need to do is to fork this Github repository.
+
+To do so, click the Fork button in the top right menu.
+
