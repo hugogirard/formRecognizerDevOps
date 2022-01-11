@@ -52,4 +52,6 @@ resource frmRecognizer 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
 }
 
 output frmEndpoint string = frmRecognizer.properties.endpoint
-output frmKey string = listKeys(frmRecognizer.id,frmRecognizer.apiVersion).key1
+output frmRecognizerId string = frmRecognizer.id
+output frmRecognizerVersion string = frmRecognizer.apiVersion
+//output frmKey string = listKeys(frmRecognizer.id,frmRecognizer.apiVersion).key1

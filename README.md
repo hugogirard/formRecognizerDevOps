@@ -77,3 +77,25 @@ Now create all the following secrets
 | ADMIN_PRINCIPAL_OBJECT_ID | This is the ID related to an ADMIN that will have access to the key vault secrets.  This secret is optional and related to [access policies in KeyVault](https://docs.microsoft.com/en-us/azure/key-vault/general/assign-access-policy?tabs=azure-portal).
 | SP_PRINCIPAL_OBJECT_ID | The clientId of the Service Principal created before
 | SUBSCRIPTION_ID | The ID of the subscription
+
+## Run the infrastructure Github Action
+
+Now is time to create all the Azure Resources by running the Github Action that will create the infrastructure as code.
+
+Now, click on the menu in the **Actions** tab.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/actions.png)
+
+You have a warning that tell you the Github Action are disabled, click the gree button to enable the Github actions.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/accept.png)
+
+Now click on the Create Azure Resources in the left menu.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/createazureresource.png)
+
+Now click on the Run workflow button.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/run.png)
+
+This Github action will create in parallel the 3 environments, give access to your service principal to the Azure Key Vault and build and deploy the Azure Function.

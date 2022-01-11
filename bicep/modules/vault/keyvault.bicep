@@ -24,13 +24,18 @@ param environmentName string
 param adminIdentity string = 'NONE'
 
 param frmRecognizerEndpoint string
-param frmKey string
+
+param frmRecognizerId string
+param frmRecognizerVersion string
+
+//param frmKey string
 
 param strDocumentName string
 param strDocumentId string
 param strDocumentApiVersion string
 
 var strCnxString = 'DefaultEndpointsProtocol=https;AccountName=${strDocumentName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(strDocumentId, strDocumentApiVersion).keys[0].value}'
+var frmKey = listKeys(frmRecognizerId,frmRecognizerVersion).key1
 
 resource keyvault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
   name: 'vault-${environmentName}-${suffix}'

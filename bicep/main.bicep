@@ -52,7 +52,8 @@ module keyVault 'modules/vault/keyvault.bicep' = {
     suffix: suffix
     adminIdentity: adminIdentity
     environmentName: environmentName
-    frmKey: cognitives.outputs.frmKey
+    frmRecognizerId : cognitives.outputs.frmRecognizerId
+    frmRecognizerVersion: cognitives.outputs.frmRecognizerVersion
     frmRecognizerEndpoint: cognitives.outputs.frmEndpoint
     strDocumentId: storage.outputs.strDocumentId
     strDocumentName: storage.outputs.strDocumentName
@@ -61,5 +62,5 @@ module keyVault 'modules/vault/keyvault.bicep' = {
 }
 
 output formRecognizerEndpoint string = cognitives.outputs.frmEndpoint
-output formRecognizerKey string = cognitives.outputs.frmKey
+//output formRecognizerKey string = cognitives.outputs.frmKey
 output keyvaultName string = keyVault.outputs.keyvaultName
