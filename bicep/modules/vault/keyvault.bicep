@@ -41,8 +41,6 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
   name: 'vault-${environmentName}-${suffix}'
   location: location
   properties: {
-    accessPolicies: [
-    ]
     sku: {
       family: 'A'
       name: 'standard'
