@@ -155,6 +155,7 @@ Those secrets are needed to deploy your model between your different environment
 | ----- | -----
 | FUNCTION_COPY_MODEL | This is the endpoint of the copy model function
 | FUNCTION_VALIDATE | This is the endpoint of the validate function
+| FUNCTION_TRAIN_MODEL | This is the endpoint of the validate function train model
 
 ### Function Copy Model Endpoint
 
@@ -178,7 +179,11 @@ Click on the CopyModel one and click on the button **Get Function Url** and copy
 
 ### Function Validate Endpoint
 
-Repeat the previous step but this time get the function url for the **ValidateModelExists** function and create the Github secret **FUNCTION_VALIDATE**.
+Repeat the previous step but this time get the function url for the **ValidateModelExists** function and create the Github secret **FUNCTION_TRAIN_MODEL**.
+
+### Function Train Model
+
+Repeat the previous step but this time get the function url for the **TrainModel** function and create the Github secret **FUNCTION_VALIDATE**.
 
 ## Train the model
 

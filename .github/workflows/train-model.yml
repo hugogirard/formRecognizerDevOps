@@ -1,0 +1,19 @@
+name: Train Model
+
+on:
+  workflow_dispatch:
+
+jobs:
+  train:
+    name: Train the new model
+    environment:
+      name: DEV
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run Azure PowerShell script validate
+        run: |
+          ./scripts/trainModel.ps1 -endpoint ${{ secrets.FUNCTION_TRAIN_MODEL }}
+        shell: pwsh
