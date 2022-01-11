@@ -185,6 +185,10 @@ Repeat the previous step but this time get the function url for the **ValidateMo
 
 Repeat the previous step but this time get the function url for the **TrainModel** function and create the Github secret **FUNCTION_VALIDATE**.
 
+Once all those secrets created in your repository you should see this.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/reposecrets.png)
+
 ## Train the model
 
 Like mentionned before, you can train the model using **Form Recognizer Studio** but in this sample all the document and labelling are already provided.  Because of this we can leverage the SDK (that is wrapped inside the Azure Function).
@@ -212,3 +216,4 @@ Upload all the files in this folder into the container created before.
 Once is done your container should look like something like this.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/modelcontainer.png)
+

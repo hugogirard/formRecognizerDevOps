@@ -15,5 +15,5 @@ jobs:
 
       - name: Run Azure PowerShell script validate
         run: |
-          ./scripts/trainModel.ps1 -endpoint ${{ secrets.FUNCTION_TRAIN_MODEL }}
+          ./scripts/trainModel.ps1 -functionEndpoint ${{ secrets.FUNCTION_TRAIN_MODEL }}
         shell: pwsh
