@@ -78,6 +78,30 @@ Now create all the following secrets
 | SP_PRINCIPAL_OBJECT_ID | The clientId of the Service Principal created before
 | SUBSCRIPTION_ID | The ID of the subscription
 
+## Create the environment in Github
+
+For the deployment to work correctly between your different environment (Dev, QA, Prod) you need to create them in Github.  For this go to Settings.
+
+![settings](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/settings.png)
+
+In the left menu click Environments
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/env.png)
+
+Click the new environment button
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/newenvironment.png)
+
+You will create DEV and QA with those settings
+
+![settings](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/set1.png)
+
+Now, create the PROD environment with the current settings. 
+
+![settings](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/set2.png)
+
+For production, you will add a reviewers, you can use your own Github user.  The goal here is most of the time before going to production you want someone to approve the deployment of the artifact, in this case the trained model tested in QA migrated from Dev.
+
 ## Run the infrastructure Github Action
 
 Now is time to create all the Azure Resources by running the Github Action that will create the infrastructure as code.
