@@ -65,9 +65,9 @@ jobs:
 
       # Temporary step the bicep linter return an error today for the
       # method PATCH for CORS on storage
-      # - name: Convert to ARM template
-      #   run: |
-      #     bicep build ./bicep/main.bicep
+      - name: Convert to ARM template
+        run: |
+          bicep build ./bicep/main.bicep
           
           
       - name: Deploy Azure Resources
@@ -76,5 +76,5 @@ jobs:
         with:
           subscriptionId: ${{ secrets.subscriptionId }}
           resourceGroupName: ${{ inputs.resourceGroupName }}
-          template: ./bicep/main.bicep
+          template: ./bicep/main.json
           parameters: environmentName=${{ inputs.environmentName }} spIdentity=${{ secrets.sp_identity }}
