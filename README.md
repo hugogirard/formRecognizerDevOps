@@ -179,3 +179,31 @@ Click on the CopyModel one and click on the button **Get Function Url** and copy
 ### Function Validate Endpoint
 
 Repeat the previous step but this time get the function url for the **ValidateModelExists** function and create the Github secret **FUNCTION_VALIDATE**.
+
+## Train the model
+
+Like mentionned before, you can train the model using **Form Recognizer Studio** but in this sample all the document and labelling are already provided.  Because of this we can leverage the SDK (that is wrapped inside the Azure Function).
+
+Go to the Azure Storage in the resource group **rg-form-recognizer-devops-dev**.  
+
+Click on the **Containers** menu in the left
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/containers.png)
+
+Now click on the button Container at the top
+
+1![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/container.png)
+
+Create a new container called **model**
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/model.png)
+
+Now you will need to upload all the assets in the new container, in the git repository you will find a folder called model.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/folder.png)
+
+Upload all the files in this folder into the container created before.
+
+Once is done your container should look like something like this.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/modelcontainer.png)
