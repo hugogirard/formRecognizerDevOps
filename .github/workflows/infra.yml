@@ -78,7 +78,7 @@ jobs:
   #       run: az keyvault set-policy -n ${{ needs.create-prod-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}                
   
   create-deploy-azure-function:
-    needs: [create-dev-environment, create-qa-environment, create-prod-environment,give-vault-access-service-principal]
+    needs: [create-dev-environment, create-qa-environment, create-prod-environment ]
     runs-on: ubuntu-latest
 
     env:
