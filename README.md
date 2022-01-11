@@ -33,7 +33,47 @@ This is the flow of our CI/CD.
 
 # How to execute this sample
 
+This section will explain you how to run this sample into your own Azure tenant.
+
+## Fork the repository
+
 The first thing you need to do is to fork this Github repository.
 
 To do so, click the Fork button in the top right menu.
 
+![fork](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/fork.png)
+
+## Create service principal to run the Github actions
+
+To create the resources in Azure you will need to create a service principal that will be used in the infra pipeline.  To do this please follow this [link](https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret). Be sure to take note of the credential returned when creating the **service principal** you will need it for the next step.
+
+Because multiple resource groups will be create **don't create a scope at resource group level**.
+
+The command should look something like this
+
+```
+az ad sp create-for-rbac --name "sp-gh-action" --role contributor --sdk-auth
+```
+
+## Create the needed Github Secrets
+
+The pipelines need to have some Github secrets to be created before execution.  To create the secrets, click the Settings in the menu.
+
+![settings](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/settings.png)
+
+Next, click Secrets in the left menu.
+
+![secrets](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/secrets.png)
+
+Now click on the button **New repository secret**.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/newreposecret.png)
+
+Now create all the following secrets
+
+| Name | Value
+| ----- | -----
+| AZURE_CREDENTIALS | The value from the step before when creating the service principal.
+| ADMIN_PRINCIPAL_OBJECT_ID | This is the ID related to an ADMIN that will have access to the key vault secrets.  This secret is optional and related to [access policies in KeyVault](https://docs.microsoft.com/en-us/azure/key-vault/general/assign-access-policy?tabs=azure-portal).
+| SP_PRINCIPAL_OBJECT_ID | The clientId of the Service Principal created before
+| SUBSCRIPTION_ID | The ID of the subscription
