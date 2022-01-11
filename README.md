@@ -217,3 +217,32 @@ Once is done your container should look like something like this.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/modelcontainer.png)
 
+Now go back to the **Actions** menu in the github repository.
+
+Select the train model action
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/trainmodelaction.png)
+
+Now run this Github action, once is done this will return a Guid (this is the ID of the trained model).  Take note of this Guid.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/trained.png)
+
+## Copy the model in QA environment
+
+Now the model is trained in DEV environment, is now time to migrate it to the QA environment.
+
+Go back to the **Actions** menu and select the action Migrate Model.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/migrate.png)
+
+You will need to enter the **GUID** of the model trained before.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/copymodel.png)
+
+First, the github action will validate the model is present in the DEV environment, if it's the case it will copy the model in QA environment.  Once this is complete you should see something like this.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/migratemodel.png)
+
+As you can see, the approver you defined before in your PROD environment need to approve before the model is copied into PROD.
+
+You can now review the deployments and approve it. Once is done the model will be copied in the PROD environment.
