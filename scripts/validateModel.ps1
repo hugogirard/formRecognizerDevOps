@@ -2,12 +2,15 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$modelId,
     [Parameter(Mandatory = $true)]
-    [string]$endpoint,
-    [Parameter(Mandatory = $true)]
-    [string]$code
+    [string]$endpoint
 )
 
 try {
+
+    $values = $endpoint.Split("?")
+    $endpoint = $values[0]
+    $code = $values[1].Replace("code=","")
+
     $header = @{        
         "Content-Type"="application/json"
         "x-functions-key"="$code"

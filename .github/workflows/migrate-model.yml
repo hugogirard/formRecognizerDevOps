@@ -20,7 +20,7 @@ jobs:
 
       - name: Run Azure PowerShell script validate
         run: |
-          ./scripts/validateModel.ps1 -modelId ${{ github.event.inputs.modelId }} -endpoint ${{ secrets.FUNCTION_VALIDATE_ENDPOINT }} -code ${{ secrets.VALIDATE_FUNC_CODE }}
+          ./scripts/validateModel.ps1 -modelId ${{ github.event.inputs.modelId }} -endpoint ${{ secrets.FUNCTION_VALIDATE }}
         shell: pwsh
 
   deploymentQA:

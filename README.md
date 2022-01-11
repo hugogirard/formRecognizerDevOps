@@ -74,7 +74,7 @@ Now create all the following secrets
 | Name | Value
 | ----- | -----
 | AZURE_CREDENTIALS | The value from the step before when creating the service principal.
-| ADMIN_PRINCIPAL_OBJECT_ID | This is the ID related to an ADMIN that will have access to the key vault secrets.  This secret is optional and related to [access policies in KeyVault](https://docs.microsoft.com/en-us/azure/key-vault/general/assign-access-policy?tabs=azure-portal).
+| SUBSCRIPTION_ID | The ID of the subscription where all the resources will be created
 | SP_PRINCIPAL_OBJECT_ID | The objectId of the Service Principal created before
 
 To find the SP_PRINCIPAL_OBJECT_ID you can go into you Azure Active Directory.
@@ -139,4 +139,43 @@ Now click on the Run workflow button.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/run.png)
 
-This Github action will create in parallel the 3 environments, give access to your service principal to the Azure Key Vault and build and deploy the Azure Function.
+This Github action will create in parallel the 3 environments, and build and deploy the Azure Function.
+
+This is what the Github Action look like
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/infra.png)
+
+## Create new secrets
+
+Now, you will need to create 3 new secrets related to the deployment of the Azure function.
+
+Those secrets are needed to deploy your model between your different environment.
+
+| Name | Value
+| ----- | -----
+| FUNCTION_COPY_MODEL | This is the endpoint of the copy model function
+| FUNCTION_VALIDATE | This is the endpoint of the validate function
+
+### Function Copy Model Endpoint
+
+To find the endpoint of the FUNCTION_COPY_MODEL go to the resource group called **rg-form-recognizer-devops-utility**.
+
+You will see an Azure Function with the name **func-form-<guid>**
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/func.png)
+
+Click on the left menu on Functions
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/lfunc.png)
+
+You will see all functions in the function app
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/funtions.png)
+
+Click on the CopyModel one and click on the button **Get Function Url** and copy the value in the Github Secret **FUNCTION_COPY_MODEL**
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/funtionurl.png)
+
+### Function Validate Endpoint
+
+Repeat the previous step but this time get the function url for the **ValidateModelExists** function and create the Github secret **FUNCTION_VALIDATE**.
