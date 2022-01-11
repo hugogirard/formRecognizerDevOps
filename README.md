@@ -75,8 +75,25 @@ Now create all the following secrets
 | ----- | -----
 | AZURE_CREDENTIALS | The value from the step before when creating the service principal.
 | ADMIN_PRINCIPAL_OBJECT_ID | This is the ID related to an ADMIN that will have access to the key vault secrets.  This secret is optional and related to [access policies in KeyVault](https://docs.microsoft.com/en-us/azure/key-vault/general/assign-access-policy?tabs=azure-portal).
-| SP_PRINCIPAL_OBJECT_ID | The clientId of the Service Principal created before
-| SUBSCRIPTION_ID | The ID of the subscription
+| SP_PRINCIPAL_OBJECT_ID | The objectId of the Service Principal created before
+
+To find the SP_PRINCIPAL_OBJECT_ID you can go into you Azure Active Directory.
+
+Next in the left menu go to **Enterprise applications**.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/ent.png)
+
+Now, select All Applications
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/all.png)
+
+In the search bar enter the name of the service principal created before, for example in this case it was sp-gh-action.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/appent.png)
+
+Click on your Service Principal and copy the value Object ID for the secret in Github called **SP_PRINCIPAL_OBJECT_ID**.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/spdetails.png)
 
 ## Create the environment in Github
 
