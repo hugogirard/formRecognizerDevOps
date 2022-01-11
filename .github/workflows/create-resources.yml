@@ -35,7 +35,7 @@ on:
         required: true
       subscriptionId:
         required: true
-      admin_identity:
+      sp_identity:
         required: true        
     outputs:
       keyVaultName:
@@ -77,4 +77,4 @@ jobs:
           subscriptionId: ${{ secrets.subscriptionId }}
           resourceGroupName: ${{ inputs.resourceGroupName }}
           template: ./bicep/main.bicep
-          parameters: environmentName=${{ inputs.environmentName }} adminIdentity=${{ secrets.admin_identity }}
+          parameters: environmentName=${{ inputs.environmentName }} spIdentity=${{ secrets.sp_identity }}

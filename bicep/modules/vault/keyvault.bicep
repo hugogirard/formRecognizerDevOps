@@ -21,7 +21,7 @@
 param location string
 param suffix string
 param environmentName string
-param adminIdentity string = 'NONE'
+param spIdentity string
 
 param frmRecognizerEndpoint string
 
@@ -41,30 +41,24 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
   name: 'vault-${environmentName}-${suffix}'
   location: location
   properties: {
+    accessPolicies: [
+      {
+        tenantId: subscription().tenantId
+        objectId: spIdentity
+        permissions: {
+          secrets: [
+            'get'
+            'list'
+          ]
+        }
+      }
+    ]    
     sku: {
       family: 'A'
       name: 'standard'
     }
     tenantId: subscription().tenantId
     enableSoftDelete: false
-  }
-}
-
-resource accessPolicies 'Microsoft.KeyVault/vaults/accessPolicies@2021-06-01-preview' = if ( adminIdentity != 'NONE' ) {
-  name: 'accessPolicies'
-  parent: keyvault
-  properties: {
-    accessPolicies: [
-      {
-        tenantId: subscription().tenantId
-        objectId: adminIdentity
-        permissions: {
-          secrets: [
-            'all'
-          ]
-        }
-      }
-    ]
   }
 }
 

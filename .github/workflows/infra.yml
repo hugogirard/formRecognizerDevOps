@@ -33,7 +33,7 @@ jobs:
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      admin_identity: ${{ secrets.ADMIN_PRINCIPAL_OBJECT_ID }}
+      admin_identity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
   create-qa-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -44,7 +44,7 @@ jobs:
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      admin_identity: ${{ secrets.ADMIN_PRINCIPAL_OBJECT_ID }}
+      admin_identity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
   create-prod-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -55,27 +55,27 @@ jobs:
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      admin_identity: ${{ secrets.ADMIN_PRINCIPAL_OBJECT_ID }}      
+      admin_identity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID  }}      
 
-  give-vault-access-service-principal:
-    needs: [create-dev-environment, create-qa-environment, create-prod-environment]
-    runs-on: ubuntu-latest
+  # give-vault-access-service-principal:
+  #   needs: [create-dev-environment, create-qa-environment, create-prod-environment]
+  #   runs-on: ubuntu-latest
 
-    steps:
+  #   steps:
 
-      - name: Azure Login
-        uses: Azure/login@v1
-        with:
-          creds: ${{ secrets.azure_credentials }}  
+  #     - name: Azure Login
+  #       uses: Azure/login@v1
+  #       with:
+  #         creds: ${{ secrets.azure_credentials }}  
 
-      - name: Give SP Dev Access Vault
-        run: az keyvault set-policy -n ${{ needs.create-dev-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
+  #     - name: Give SP Dev Access Vault
+  #       run: az keyvault set-policy -n ${{ needs.create-dev-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
-      - name: Give SP QA Access Vault
-        run: az keyvault set-policy -n ${{ needs.create-qa-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
+  #     - name: Give SP QA Access Vault
+  #       run: az keyvault set-policy -n ${{ needs.create-qa-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
-      - name: Give SP Prod Access Vault
-        run: az keyvault set-policy -n ${{ needs.create-prod-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}                
+  #     - name: Give SP Prod Access Vault
+  #       run: az keyvault set-policy -n ${{ needs.create-prod-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}                
   
   create-deploy-azure-function:
     needs: [create-dev-environment, create-qa-environment, create-prod-environment,give-vault-access-service-principal]
