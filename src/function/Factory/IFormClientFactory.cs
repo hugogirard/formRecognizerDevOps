@@ -2,5 +2,7 @@ namespace DemoForm;
 
 public interface IFormClientFactory
 {
-    DocumentModelAdministrationClient CreateClient(FORM_RECOGNIZER_ENVIRONMENT env);
+    DocumentModelAdministrationClient CreateAdministrationClient(FORM_RECOGNIZER_ENVIRONMENT env);
+
+    DocumentAnalysisClient CreateAnalysisClient(FORM_RECOGNIZER_ENVIRONMENT env);
 }

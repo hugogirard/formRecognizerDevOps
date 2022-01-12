@@ -33,7 +33,7 @@ public class GetModel
             if (!Enum.TryParse(environment, out formEnvironment))
                 return new BadRequestObjectResult("The Environment query string is invalid");
 
-            var trainingClient = _formClientFactory.CreateClient(formEnvironment);
+            var trainingClient = _formClientFactory.CreateAdministrationClient(formEnvironment);
 
             AsyncPageable<DocumentModelInfo> models = trainingClient.GetModelsAsync();
             var modelsInfo = new List<ModelInfo>();

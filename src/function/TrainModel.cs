@@ -41,7 +41,7 @@ public class TrainModel
                                                       DateTime.UtcNow.AddMinutes(15));
             
             // By default the training is done in the DEV environment
-            var trainingClient = _formClientFactory.CreateClient(FORM_RECOGNIZER_ENVIRONMENT.DEV);
+            var trainingClient = _formClientFactory.CreateAdministrationClient(FORM_RECOGNIZER_ENVIRONMENT.DEV);
 
             var buildOptions = new BuildModelOptions();
             if (!string.IsNullOrEmpty(modelDescription)) 

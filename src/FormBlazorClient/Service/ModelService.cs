@@ -16,7 +16,7 @@ public class ModelService : IModelService
         FUNCTION_CODE = configuration["FunctionKeyCode"];
     }
 
-    public async Task<IEnumerable<ModelDefinition>> GetModelsAsync(ModelEnvironment environment)
+    public async Task<IList<ModelDefinition>> GetModelsAsync(ModelEnvironment environment)
     {
         string url = $"{BASE_URL}/GetModel?environment={environment}";
         var request = new HttpRequestMessage(HttpMethod.Get, url);
@@ -30,7 +30,7 @@ public class ModelService : IModelService
         {
             string json = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<IEnumerable<ModelDefinition>>(json,new JsonSerializerOptions 
+            return JsonSerializer.Deserialize<IList<ModelDefinition>>(json,new JsonSerializerOptions 
             { 
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });

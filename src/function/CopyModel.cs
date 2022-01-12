@@ -37,8 +37,8 @@ public class CopyModel
                 if (!result.IsValid)
                     return new BadRequestObjectResult("The parameters are invalid");
 
-                var sourceClient = _formClientFactory.CreateClient(copyModel.SourceEnvironment);
-                var targetClient = _formClientFactory.CreateClient(copyModel.DestinationEnvironment);
+                var sourceClient = _formClientFactory.CreateAdministrationClient(copyModel.SourceEnvironment);
+                var targetClient = _formClientFactory.CreateAdministrationClient(copyModel.DestinationEnvironment);
 
                 // Get info of the model to copy (description)
                 var response = await sourceClient.GetModelAsync(copyModel.SourceModelId);

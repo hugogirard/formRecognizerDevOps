@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @inject IModelService _modelService
+@inject IJSRuntime _jsRuntime
 
 <h2>List of trained model in an environment</h2>
 
@@ -39,7 +40,7 @@
                             </button>
                         </td>
                         <td>
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" @onclick="(async () => await OnDeleteModel(model))">
                                 DELETE
                             </button>
                         </td>
@@ -55,12 +56,31 @@
 @code {
     private bool IsLoading = false;
 
-    private IEnumerable<ModelDefinition> Models;
+    private IList<ModelDefinition> Models;
+    private ModelEnvironment SelectedEnvironment;
 
     async Task OnEnvironmentChanged(ModelEnvironment environment)
     {
         IsLoading = true;
+        SelectedEnvironment = environment;
         Models = await _modelService.GetModelsAsync(environment);
         IsLoading = false;
+    }
+
+    async Task OnDeleteModel(ModelDefinition model)
+    {
+        bool confirmed = await _jsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the model {model.ModelId}");
+        if (confirmed)
+        {
+            IsLoading = true;
+            bool success = await _modelService.DeleteModelAsync(model.ModelId, SelectedEnvironment);
+
+            if (success)
+            {
+                Models.Remove(model);
+            }
+
+            IsLoading = false;
+        }
     }
 }

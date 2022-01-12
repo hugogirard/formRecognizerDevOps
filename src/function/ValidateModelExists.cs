@@ -40,7 +40,7 @@ public class ValidateModelExists
                 return new BadRequestObjectResult("The environment is invalid");
             }
 
-            var trainingClient = _formFactory.CreateClient(formEnvironment);
+            var trainingClient = _formFactory.CreateAdministrationClient(formEnvironment);
 
             Response<DocumentModel> operation = await trainingClient.GetModelAsync(modelId);
                         
