@@ -101,7 +101,11 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'FormRecognizerProdKey'
           value: listKeys(formPROD.id,formPROD.apiVersion).key1
-        }         
+        } 
+        {
+          name: 'DevStorageCnxString'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${devStorage.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(devStorage.id, devStorage.apiVersion).keys[0].value}'
+        }                
         {
           name: 'WEBSITE_CONTENTSHARE'
           value: 'processorapp092'

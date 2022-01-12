@@ -98,6 +98,11 @@ jobs:
           qaResourceGroupName: 'rg-form-recognizer-devops-qa'
           prodResourceGroupName: 'rg-form-recognizer-devops-prod'
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: param
+          path: bicep/utility.parameters.json
+
       - name: Deploy Azure Resources
         id: armDeployment
         uses: azure/arm-deploy@v1
@@ -144,11 +149,15 @@ jobs:
         with:
           creds: ${{ secrets.azure_credentials }}
 
+      - name: Convert to ARM template
+        run: |
+          bicep build ./bicep/web.bicep
+
       - name: Deploy Azure Resources
         id: armDeployment
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: ${{ secrets.subscriptionId }}
           resourceGroupName: ${{ env.RG_NAME }}
-          template: ./bicep/web.bicep
+          template: ./bicep/web.json
           parameters: location='eastus' strName=${{ needs.create-deploy-azure-function.outputs.storageName }} appInsightName=${{ needs.create-deploy-azure-function.outputs.appInsightName }}
