@@ -80,3 +80,7 @@ jobs:
           resourceGroupName: ${{ inputs.resourceGroupName }}
           template: ./bicep/main.json
           parameters: environmentName=${{ inputs.environmentName }}
+
+      - name: logout
+        run: |
+          az logout

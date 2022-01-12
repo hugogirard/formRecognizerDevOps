@@ -123,7 +123,11 @@ jobs:
         uses: Azure/functions-action@v1        
         with:
           app-name: ${{ steps.armDeployment.outputs.functionName }}
-          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'     
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+
+      - name: logout
+        run: |
+          az logout              
 
   create-deploy-blazor:
     needs: create-deploy-azure-function
@@ -132,7 +136,7 @@ jobs:
     env:
       RG_NAME: 'rg-form-recognizer-devops-utility'
       LOCATION: 'eastus'      
-      AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/function'    
+      AZURE_WEBAPP_PACKAGE_PATH: 'src/FormBlazorClient'    
       DOTNET_VERSION: '6.0.x'              
 
     steps:
@@ -156,3 +160,25 @@ jobs:
           resourceGroupName: ${{ env.RG_NAME }}
           template: ./bicep/web.json
           parameters: location='eastus' strName=${{ needs.create-deploy-azure-function.outputs.storageName }} appInsightName=${{ needs.create-deploy-azure-function.outputs.appInsightName }}
+
+      - name: Setup DotNet 6.0.X Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: dotnet build and publish
+        run: |
+          pushd './${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish -c Release -o output          
+
+      - name: 'Run Azure webapp deploy action using publish profile credentials'
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: ${{ steps.armDeployment.outputs.webAppName }}
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/output' 
+
+      - name: logout
+        run: |
+          az logout            

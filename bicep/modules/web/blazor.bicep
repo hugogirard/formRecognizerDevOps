@@ -64,3 +64,5 @@ resource appService 'Microsoft.Web/sites@2021-02-01' = {
     }
   }
 }
+
+output webName string = appService.name
