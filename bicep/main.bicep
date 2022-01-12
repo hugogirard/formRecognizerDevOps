@@ -33,7 +33,7 @@ module cognitives 'modules/cognitives/form.bicep' = {
   }
 }
 
-module storage 'modules/storage/storage.bicep' = if (environmentName == 'DEV') {
+module storage 'modules/storage/storage.bicep' = if (toLower(environmentName) == 'dev') {
   name: 'storage-${environmentName}'
   params: {
     name: strName
