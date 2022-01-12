@@ -1,0 +1,20 @@
+﻿
+@if (IsLoading)
+{
+    <div id="splash-page">
+        <div class="page-splash">
+            <div class="page-splash-message">
+                <div style="color:white;font-size:24px">Processing please wait...</div>
+                <div>
+                    <i class="fa fa-spinner fa-spin fa-3x" style="color:white"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@code {
+    [Parameter]
+    public bool IsLoading { get; set; }
+}

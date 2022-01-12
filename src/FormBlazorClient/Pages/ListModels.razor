@@ -1,0 +1,22 @@
+﻿@page "/"
+
+@inject IModelService _modelService
+
+<h2>List of trained model in an environment</h2>
+
+<Loading IsLoading="@IsLoading" />
+
+<div class="row" style="margin-top:15px">
+    <div class="col-md-4">
+        <Environments OnEnvironmentChanged="(async (e) => await OnEnvironmentChanged(e))"/>
+    </div>
+</div>
+
+@code {
+    private bool IsLoading = false;
+
+    async Task OnEnvironmentChanged(ModelEnvironment environment)
+    {
+        var models = await _modelService.GetModelsAsync(environment);
+    }
+}

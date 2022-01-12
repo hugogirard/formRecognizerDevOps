@@ -39,7 +39,9 @@ public class GetModel
             var modelsInfo = new List<ModelInfo>();
             await foreach (DocumentModelInfo modelInfo in models)
             {
-                modelsInfo.Add(new ModelInfo(modelInfo));
+                // Remove the pre-build model from the list
+                if (!modelInfo.ModelId.ToLower().Contains("prebuilt"))
+                    modelsInfo.Add(new ModelInfo(modelInfo));
             }
 
             return new OkObjectResult(modelsInfo);

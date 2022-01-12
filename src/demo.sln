@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "function", "function\function.csproj", "{7270FD33-A110-4A26-8758-2F3D8885E3A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormBlazorClient", "FormBlazorClient\FormBlazorClient.csproj", "{859DD467-45DA-465C-81A2-91F1DEF14682}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7270FD33-A110-4A26-8758-2F3D8885E3A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7270FD33-A110-4A26-8758-2F3D8885E3A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7270FD33-A110-4A26-8758-2F3D8885E3A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{859DD467-45DA-465C-81A2-91F1DEF14682}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{859DD467-45DA-465C-81A2-91F1DEF14682}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{859DD467-45DA-465C-81A2-91F1DEF14682}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{859DD467-45DA-465C-81A2-91F1DEF14682}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
