@@ -86,26 +86,26 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
           name: 'FormRecognizerDevEndpoint'
           value: formDev.properties.endpoint
         }
-        {
-          name: 'FormRecognizerDevKey'
-          value: listKeys(formDev.id,formDev.apiVersion).key1
-        }
+        // {
+        //   name: 'FormRecognizerDevKey'
+        //   value: listKeys(formDev.id,formDev.apiVersion).key1
+        // }
         {
           name: 'FormRecognizerQaEndpoint'
           value: formQA.properties.endpoint
         }
-        {
-          name: 'FormRecognizerQaKey'
-          value: listKeys(formQA.id,formQA.apiVersion).key1
-        }
+        // {
+        //   name: 'FormRecognizerQaKey'
+        //   value: listKeys(formQA.id,formQA.apiVersion).key1
+        // }
         {
           name: 'FormRecognizerProdEndpoint'
           value: formPROD.properties.endpoint
         }
-        {
-          name: 'FormRecognizerProdKey'
-          value: listKeys(formPROD.id,formPROD.apiVersion).key1
-        }                
+        // {
+        //   name: 'FormRecognizerProdKey'
+        //   value: listKeys(formPROD.id,formPROD.apiVersion).key1
+        // }                
         {
           name: 'WEBSITE_CONTENTSHARE'
           value: 'processorapp092'
