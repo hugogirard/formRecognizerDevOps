@@ -81,7 +81,15 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'FormRecognizerDevEndpoint'
           value: formDev.properties.endpoint
-        }             
+        }           
+        {
+          name: 'FormRecognizerQaEndpoint'
+          value: formQA.properties.endpoint
+        }
+        {
+          name: 'FormRecognizerProdEndpoint'
+          value: formPROD.properties.endpoint
+        }          
         {
           name: 'WEBSITE_CONTENTSHARE'
           value: 'processorapp092'

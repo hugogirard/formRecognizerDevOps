@@ -15,7 +15,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-01-15' = {
   }
 }
 
-resource appInsights 'Microsoft.Insights/components@2020-02-02-preview' existing = {
+resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: appInsightName
 }
 
