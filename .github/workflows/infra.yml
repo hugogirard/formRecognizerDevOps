@@ -98,11 +98,6 @@ jobs:
           qaResourceGroupName: 'rg-form-recognizer-devops-qa'
           prodResourceGroupName: 'rg-form-recognizer-devops-prod'
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: param
-          path: bicep/utility.parameters.json
-
       - name: Deploy Azure Resources
         id: armDeployment
         uses: azure/arm-deploy@v1

@@ -20,7 +20,7 @@ param prodResourceGroupName string
 var appServiceName = 'func-plan-${suffix}'
 var functionAppName = 'func-form-${suffix}'
 
-resource devStorage 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' existing = {
+resource devStorage 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
   name: devStorageName
   scope: resourceGroup(devResourceGroupName)
 }
