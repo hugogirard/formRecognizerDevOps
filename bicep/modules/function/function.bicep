@@ -81,7 +81,11 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'FormRecognizerDevEndpoint'
           value: formDev.properties.endpoint
-        }           
+        }                  
+        {
+          name: 'FormRecognizerDevKey'
+          value: listKeys(formDev.id,formDev.apiVersion).key1
+        }        
         {
           name: 'FormRecognizerQaEndpoint'
           value: formQA.properties.endpoint

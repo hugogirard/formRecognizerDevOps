@@ -17,10 +17,12 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-01-15' = {
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: appInsightName
+  scope: resourceGroup(resourceGroup().name)
 }
 
 resource str 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
   name: storageName
+  scope: resourceGroup(resourceGroup().name)
 }
 
 resource appService 'Microsoft.Web/sites@2021-02-01' = {
