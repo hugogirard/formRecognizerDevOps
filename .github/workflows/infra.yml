@@ -129,6 +129,12 @@ jobs:
     needs: create-deploy-azure-function
     runs-on: ubuntu-latest
 
+    env:
+      RG_NAME: 'rg-form-recognizer-devops-utility'
+      LOCATION: 'eastus'      
+      AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/function'    
+      DOTNET_VERSION: '6.0.x'              
+
     steps:
       
       - uses: actions/checkout@v2

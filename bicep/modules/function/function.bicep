@@ -91,9 +91,17 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
           value: formQA.properties.endpoint
         }
         {
+          name: 'FormRecognizerQaKey'
+          value: listKeys(formQA.id,formQA.apiVersion).key1
+        }        
+        {
           name: 'FormRecognizerProdEndpoint'
           value: formPROD.properties.endpoint
-        }          
+        }                 
+        {
+          name: 'FormRecognizerProdKey'
+          value: listKeys(formPROD.id,formPROD.apiVersion).key1
+        }         
         {
           name: 'WEBSITE_CONTENTSHARE'
           value: 'processorapp092'
