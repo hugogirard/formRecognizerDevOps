@@ -33,7 +33,6 @@ jobs:
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      sp_identity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
   create-qa-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -43,8 +42,7 @@ jobs:
       environmentName: 'qa'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
-      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      sp_identity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
+      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}      
 
   create-prod-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -54,28 +52,7 @@ jobs:
       environmentName: 'prod'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
-      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      sp_identity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID  }}      
-
-  # give-vault-access-service-principal:
-  #   needs: [create-dev-environment, create-qa-environment, create-prod-environment]
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-
-  #     - name: Azure Login
-  #       uses: Azure/login@v1
-  #       with:
-  #         creds: ${{ secrets.azure_credentials }}  
-
-  #     - name: Give SP Dev Access Vault
-  #       run: az keyvault set-policy -n ${{ needs.create-dev-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
-
-  #     - name: Give SP QA Access Vault
-  #       run: az keyvault set-policy -n ${{ needs.create-qa-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
-
-  #     - name: Give SP Prod Access Vault
-  #       run: az keyvault set-policy -n ${{ needs.create-prod-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}                
+      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}         
   
   create-deploy-azure-function:
     needs: [create-dev-environment, create-qa-environment, create-prod-environment ]
@@ -98,25 +75,7 @@ jobs:
       - name: Create Resource Group
         run: |
           az group create -n ${{ env.RG_NAME }} -l ${{ env.LOCATION }}
-
-      - uses: Azure/get-keyvault-secrets@v1
-        id: devSecretVault
-        with:
-          keyvault: ${{ needs.create-dev-environment.outputs.keyvaultName }}
-          secrets: 'storageCnxString, frmEndpoint, frmKey'
-
-      - uses: Azure/get-keyvault-secrets@v1
-        id: qaSecretVault
-        with:
-          keyvault: ${{ needs.create-qa-environment.outputs.keyvaultName }}
-          secrets: 'storageCnxString, frmEndpoint, frmKey'
-
-      - uses: Azure/get-keyvault-secrets@v1
-        id: prodSecretVault
-        with:
-          keyvault: ${{ needs.create-prod-environment.outputs.keyvaultName }}
-          secrets: 'storageCnxString, frmEndpoint, frmKey'          
-
+  
       - name: Replace tokens
         uses: cschleiden/replace-tokens@v1.0
         with:        
@@ -124,13 +83,13 @@ jobs:
           tokenSuffix: __        
           files: '["bicep/utility.parameters.json"]'
         env:
-          formRecognizerDevEndpoint: ${{ steps.devSecretVault.outputs.frmEndpoint }}
-          formRecognizerQAEndpoint: ${{ steps.qaSecretVault.outputs.frmEndpoint }}
-          formRecognizerProdEndpoint: ${{ steps.prodSecretVault.outputs.frmEndpoint }}
-          formRecognizerDevKey: ${{ steps.devSecretVault.outputs.frmKey }}
-          formRecognizerQAKey: ${{ steps.qaSecretVault.outputs.frmKey }}
-          formRecognizerProdKey: ${{ steps.prodSecretVault.outputs.frmKey}}
-          devStorageCnxString: ${{ steps.devSecretVault.outputs.storageCnxString }}
+          devStorageName: ${{ needs.create-dev-environment.outputs.storageName }}
+          devFormRecognizerName: ${{ needs.create-dev-environment.outputs.formRecognizerName }}
+          qaFormRecognizerName: ${{ needs.create-qa-environment.outputs.formRecognizerName  }}
+          prodFormRecognizerName: ${{ needs.create-prod-environment.outputs.formRecognizerName  }}
+          devResourceGroupName: 'rg-form-recognizer-devops-dev'
+          qaResourceGroupName: 'rg-form-recognizer-devops-qa'
+          prodResourceGroupName: 'rg-form-recognizer-devops-prod'
 
       - name: Deploy Azure Resources
         id: armDeployment

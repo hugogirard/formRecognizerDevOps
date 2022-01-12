@@ -2,26 +2,26 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "formRecognizerDevEndpoint": {
-            "value": "__formRecognizerDevEndpoint__"
+        "devStorageName": {
+            "value": "__devStorageName__"
         },
-        "formRecognizerQAEndpoint": {
-            "value": "__formRecognizerQAEndpoint__"
+        "devFormRecognizerName": {
+            "value": "__devFormRecognizerName__"
         },
-        "formRecognizerProdEndpoint": {
-            "value": "__formRecognizerProdEndpoint__"
+        "qaFormRecognizerName": {
+            "value": "__qaFormRecognizerName__"
         },
-        "formRecognizerDevKey": {
-            "value": "__formRecognizerDevKey__"
+        "prodFormRecognizerName": {
+            "value": "__prodFormRecognizerName__"
         },
-        "formRecognizerQAKey": {
-            "value": "__formRecognizerQAKey__"
+        "devResourceGroupName": {
+            "value": "__devResourceGroupName__"
         },
-        "formRecognizerProdKey": {
-            "value": "__formRecognizerProdKey__"
+        "qaResourceGroupName": {
+            "value": "__qaResourceGroupName__"
         },
-        "devStorageCnxString": {
-            "value": "__devStorageCnxString__"
+        "prodResourceGroupName": {
+            "value": "__prodResourceGroupName__"
         }
     }
 }

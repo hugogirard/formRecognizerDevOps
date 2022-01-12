@@ -8,18 +8,37 @@ param strAccountName string
 param strAccountId string
 param strAccountApiVersion string
 
-param formRecognizerDevEndpoint string
-param formRecognizerQAEndpoint string
-param formRecognizerProdEndpoint string
+param devStorageName string
+param devFormRecognizerName string
+param qaFormRecognizerName string
+param prodFormRecognizerName string
 
-param formRecognizerDevKey string
-param formRecognizerQAKey string
-param formRecognizerProdKey string
-
-param devStorageCnxString string
+param devResourceGroupName string
+param qaResourceGroupName string
+param prodResourceGroupName string
 
 var appServiceName = 'func-plan-${suffix}'
 var functionAppName = 'func-form-${suffix}'
+
+resource devStorage 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' existing = {
+  name: devStorageName
+  scope: resourceGroup(devResourceGroupName)
+}
+
+resource formDev 'Microsoft.CognitiveServices/accounts@2021-04-30' existing = {
+  name: devFormRecognizerName
+  scope: resourceGroup(devResourceGroupName)
+}
+
+resource formQA 'Microsoft.CognitiveServices/accounts@2021-04-30' existing = {
+  name: qaFormRecognizerName
+  scope: resourceGroup(qaResourceGroupName)
+}
+
+resource formPROD 'Microsoft.CognitiveServices/accounts@2021-04-30' existing = {
+  name: prodFormRecognizerName
+  scope: resourceGroup(prodResourceGroupName)
+}
 
 resource serverFarm 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: appServiceName
@@ -57,7 +76,7 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'DevStorageCnxString'
-          value: devStorageCnxString
+          value: 'DefaultEndpointsProtocol=https;AccountName=${devStorage.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(devStorage.id, devStorage.apiVersion).keys[0].value}'
         }
         {
           name: 'ModelContainer'
@@ -65,27 +84,27 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'FormRecognizerDevEndpoint'
-          value: formRecognizerDevEndpoint
+          value: formDev.properties.endpoint
         }
         {
           name: 'FormRecognizerDevKey'
-          value: formRecognizerDevKey
+          value: listKeys(formDev.id,formDev.apiVersion).key1
         }
         {
           name: 'FormRecognizerQaEndpoint'
-          value: formRecognizerQAEndpoint
+          value: formQA.properties.endpoint
         }
         {
           name: 'FormRecognizerQaKey'
-          value: formRecognizerQAKey
+          value: listKeys(formQA.id,formQA.apiVersion).key1
         }
         {
           name: 'FormRecognizerProdEndpoint'
-          value: formRecognizerProdEndpoint
+          value: formPROD.properties.endpoint
         }
         {
           name: 'FormRecognizerProdKey'
-          value: formRecognizerProdKey
+          value: listKeys(formPROD.id,formPROD.apiVersion).key1
         }                
         {
           name: 'WEBSITE_CONTENTSHARE'

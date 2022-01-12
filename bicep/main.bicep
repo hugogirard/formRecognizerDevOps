@@ -19,10 +19,10 @@
 */
 
 param environmentName string
-param spIdentity string
 
 var location = resourceGroup().location
 var suffix = uniqueString(resourceGroup().id)
+var strName = '${toLower(environmentName)}${suffix}'
 
 module cognitives 'modules/cognitives/form.bicep' = {
   name: 'cognitives-${environmentName}'
@@ -33,34 +33,14 @@ module cognitives 'modules/cognitives/form.bicep' = {
   }
 }
 
-module storage 'modules/storage/storage.bicep' = {
+module storage 'modules/storage/storage.bicep' = if (environmentName == 'DEV') {
   name: 'storage-${environmentName}'
   params: {
-    location: location
-    suffix: suffix
+    name: strName
+    location: location    
     environment: environmentName
   }
 }
 
-module keyVault 'modules/vault/keyvault.bicep' = {
-  name: 'keyvault'
-  dependsOn: [
-    cognitives
-  ]
-  params: {
-    location: location
-    suffix: suffix
-    spIdentity: spIdentity
-    environmentName: environmentName
-    frmRecognizerId : cognitives.outputs.frmRecognizerId
-    frmRecognizerVersion: cognitives.outputs.frmRecognizerVersion
-    frmRecognizerEndpoint: cognitives.outputs.frmEndpoint
-    strDocumentId: storage.outputs.strDocumentId
-    strDocumentName: storage.outputs.strDocumentName
-    strDocumentApiVersion: storage.outputs.strDocumentApiVersion
-  }
-}
-
-output formRecognizerEndpoint string = cognitives.outputs.frmEndpoint
-//output formRecognizerKey string = cognitives.outputs.frmKey
-output keyvaultName string = keyVault.outputs.keyvaultName
+output storageName string = strName
+output formRecognizerName string = cognitives.outputs.formRecognizerName
