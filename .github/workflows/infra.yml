@@ -21,6 +21,9 @@
 name: Create Azure Resources
 
 on:  
+  push:
+    branches:
+      - refactoring
   workflow_dispatch:
           
 jobs:
@@ -57,6 +60,10 @@ jobs:
   create-deploy-azure-function:
     needs: [create-dev-environment, create-qa-environment, create-prod-environment ]
     runs-on: ubuntu-latest
+
+    outputs:
+      storageName: ${{ steps.armDeployment.outputs.storageName }}
+      appInsightName: ${{ steps.armDeployment.outputs.appInsightName }}
 
     env:
       RG_NAME: 'rg-form-recognizer-devops-utility'
@@ -117,3 +124,25 @@ jobs:
         with:
           app-name: ${{ steps.armDeployment.outputs.functionName }}
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'     
+
+  create-deploy-blazor:
+    needs: create-deploy-azure-function
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.azure_credentials }}
+
+      - name: Deploy Azure Resources
+        id: armDeployment
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.subscriptionId }}
+          resourceGroupName: ${{ env.RG_NAME }}
+          template: ./bicep/web.bicep
+          parameters: location='eastus' strName=${{ needs.create-deploy-azure-function.outputs.storageName }} appInsightName=${{ needs.create-deploy-azure-function.outputs.appInsightName }}
