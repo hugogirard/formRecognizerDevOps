@@ -30,7 +30,10 @@ public class ModelService : IModelService
         {
             string json = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<IEnumerable<ModelDefinition>>(json);
+            return JsonSerializer.Deserialize<IEnumerable<ModelDefinition>>(json,new JsonSerializerOptions 
+            { 
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
 
         }
 
@@ -46,7 +49,10 @@ public class ModelService : IModelService
         payload.modelId = modelId;
         payload.environment = environment;
 
-        request.Content = new StringContent(JsonSerializer.Serialize(payload));
+        request.Content = new StringContent(JsonSerializer.Serialize(payload,new JsonSerializerOptions 
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        }));
         var client = _httpClientfactory.CreateClient();
 
         var response = await client.DeleteAsync(url);

@@ -3,6 +3,7 @@
                  Value="@SelectEnvironment.SelectedEnvironment"
                  ValueChanged="@(async (string v) => await OnSelectionChanged(v))"
                  class="form-control">
+        <option selected></option>
         <option value="0">DEV</option>
         <option value="1">QA</option>
         <option value="2">PROD</option>
