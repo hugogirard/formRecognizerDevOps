@@ -25,7 +25,7 @@ on:
           
 jobs:
   create-dev-environment:
-    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
     with:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
       location: 'eastus'      
@@ -35,7 +35,7 @@ jobs:
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
 
   create-qa-environment:
-    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
     with:
       resourceGroupName: 'rg-form-recognizer-devops-qa'
       location: 'eastus'     
@@ -45,7 +45,7 @@ jobs:
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}      
 
   create-prod-environment:
-    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
     with:
       resourceGroupName: 'rg-form-recognizer-devops-prod'
       location: 'eastus'     
