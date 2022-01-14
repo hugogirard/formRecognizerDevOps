@@ -161,7 +161,7 @@ jobs:
           subscriptionId: ${{ secrets.subscriptionId }}
           resourceGroupName: ${{ env.RG_NAME }}
           template: ./bicep/web.json
-          parameters: location=${{ env.LOCATION }} strName=${{ needs.create-deploy-azure-function.outputs.storageName }} appInsightName=${{ needs.create-deploy-azure-function.outputs.appInsightName }}
+          parameters: location=${{ env.LOCATION }} strName=${{ needs.create-deploy-azure-function.outputs.storageName }} appInsightName=${{ needs.create-deploy-azure-function.outputs.appInsightName }} functionHostname=${{ needs.create-deploy-azure-function.outputs.functionHostname }}
 
       - name: Setup DotNet 6.0.X Environment
         uses: actions/setup-dotnet@v1
