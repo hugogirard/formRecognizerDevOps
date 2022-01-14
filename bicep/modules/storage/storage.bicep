@@ -54,7 +54,7 @@ resource storageAccountDocument 'Microsoft.Storage/storageAccounts@2021-04-01' =
 }
 
 resource containerDocuments 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {
-  name: '${storageAccountDocument.name}/default/documents'
+  name: '${storageAccountDocument.name}/default/model'
   properties: {
     publicAccess: 'None'
   }
