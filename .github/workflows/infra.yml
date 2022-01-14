@@ -67,6 +67,7 @@ jobs:
     outputs:
       storageName: ${{ steps.armDeployment.outputs.storageName }}
       appInsightName: ${{ steps.armDeployment.outputs.appInsightName }}
+      functionHostname: ${{ steps.armDeployment.outputs.appInsightName.functionHostname }}
 
     env:
       RG_NAME: 'rg-form-recognizer-devops-utility'           

@@ -128,3 +128,4 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
 }
 
 output functionName string = functionAppName
+output functionHostname string = 'https://${function.properties.hostNames[0]}/api'

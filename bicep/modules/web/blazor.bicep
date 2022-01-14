@@ -2,6 +2,7 @@ param location string
 param suffix string
 param storageName string
 param appInsightName string
+param functionHostname string
 
 var appPlanName = 'plan-blazor-${suffix}'
 var webAppName = 'blazor-admin-${suffix}'
@@ -53,6 +54,10 @@ resource appService 'Microsoft.Web/sites@2021-02-01' = {
           name: 'Container'
           value: 'upload'
         }
+        {
+          name: 'FunctionBaseUrl'
+          value: functionHostname
+        }        
       ]
       metadata: [
         {

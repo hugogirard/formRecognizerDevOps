@@ -48,5 +48,6 @@ module function 'modules/function/function.bicep' = {
 }
 
 output functionName string = function.outputs.functionName
+output functionHostname string = function.outputs.functionHostname
 output storageName string = storage.outputs.strAccountName
 output appInsightName string = insight.outputs.appInsightName
