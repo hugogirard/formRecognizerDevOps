@@ -19,12 +19,15 @@ public class ModelService : IModelService
     public async Task<IList<ModelDefinition>> GetModelsAsync(ModelEnvironment environment)
     {
         string url = $"{BASE_URL}/GetModel?environment={environment}";
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add("x-functions-key", FUNCTION_CODE);
 
-        var client = _httpClientfactory.CreateClient();
+        HttpResponseMessage response = await SendRequestAsync(url, HttpMethod.Get);
 
-        var response = await client.SendAsync(request);
+        //var request = new HttpRequestMessage(HttpMethod.Get, url);
+        //request.Headers.Add("x-functions-key", FUNCTION_CODE);
+
+        //var client = _httpClientfactory.CreateClient();
+
+        //var response = await client.SendAsync(request);
 
         if (response.IsSuccessStatusCode)
         {
@@ -42,7 +45,7 @@ public class ModelService : IModelService
     public async Task<bool> DeleteModelAsync(string modelId, ModelEnvironment environment)
     {
         string url = $"{BASE_URL}/DeleteModel";
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
+        var request = new HttpRequestMessage(HttpMethod.Delete, url);
         request.Headers.Add("x-functions-key", FUNCTION_CODE);
 
         dynamic payload = new ExpandoObject();
@@ -63,5 +66,24 @@ public class ModelService : IModelService
         return false;
     }
 
+    private async Task<HttpResponseMessage> SendRequestAsync(string url, HttpMethod method) 
+    {
+        return await SendRequestAsync(url, method, null);
+    }
 
+    private async Task<HttpResponseMessage> SendRequestAsync(string url, HttpMethod method, dynamic? payload) 
+    {
+        var request = new HttpRequestMessage(method, url);
+        request.Headers.Add("x-functions-key", FUNCTION_CODE);
+        if (payload != null) 
+        {
+            request.Content = new StringContent(JsonSerializer.Serialize(payload, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            }));
+        }
+
+        var client = _httpClientfactory.CreateClient();
+        return await client.SendAsync(request);
+    }
 }
