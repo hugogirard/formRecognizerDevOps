@@ -25,13 +25,16 @@ on:
     branches:
       - refactoring
   workflow_dispatch:
-          
+
+env:
+  LOCATION: 'eastus'
+
 jobs:
   create-dev-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
     with:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
-      location: 'eastus'      
+      location: ${{ env.LOCATION }}
       environmentName: 'dev'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
@@ -41,7 +44,7 @@ jobs:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
     with:
       resourceGroupName: 'rg-form-recognizer-devops-qa'
-      location: 'eastus'     
+      location: ${{ env.LOCATION }}     
       environmentName: 'qa'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
@@ -51,7 +54,7 @@ jobs:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
     with:
       resourceGroupName: 'rg-form-recognizer-devops-prod'
-      location: 'eastus'     
+      location: ${{ env.LOCATION }}   
       environmentName: 'prod'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
@@ -66,8 +69,7 @@ jobs:
       appInsightName: ${{ steps.armDeployment.outputs.appInsightName }}
 
     env:
-      RG_NAME: 'rg-form-recognizer-devops-utility'
-      LOCATION: 'eastus'      
+      RG_NAME: 'rg-form-recognizer-devops-utility'           
       AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/function'    
       DOTNET_VERSION: '6.0.x'              
 
@@ -134,8 +136,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      RG_NAME: 'rg-form-recognizer-devops-utility'
-      LOCATION: 'eastus'      
+      RG_NAME: 'rg-form-recognizer-devops-utility'         
       AZURE_WEBAPP_PACKAGE_PATH: 'src/FormBlazorClient'    
       DOTNET_VERSION: '6.0.x'              
 
@@ -159,7 +160,7 @@ jobs:
           subscriptionId: ${{ secrets.subscriptionId }}
           resourceGroupName: ${{ env.RG_NAME }}
           template: ./bicep/web.json
-          parameters: location='eastus' strName=${{ needs.create-deploy-azure-function.outputs.storageName }} appInsightName=${{ needs.create-deploy-azure-function.outputs.appInsightName }}
+          parameters: location=${{ env.LOCATION }} strName=${{ needs.create-deploy-azure-function.outputs.storageName }} appInsightName=${{ needs.create-deploy-azure-function.outputs.appInsightName }}
 
       - name: Setup DotNet 6.0.X Environment
         uses: actions/setup-dotnet@v1
