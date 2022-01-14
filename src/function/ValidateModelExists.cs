@@ -19,7 +19,7 @@ public class ValidateModelExists
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
     [OpenApiParameter(name: "modelId", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **modelId** to validate")]
-    [OpenApiParameter(name: "environment", In = ParameterLocation.Query, Required = true, Type = typeof(FORM_RECOGNIZER_ENVIRONMENT), Description = "The **environment** where is the model located")]
+    [OpenApiParameter(name: "environment", In = ParameterLocation.Query, Required = true, Type = typeof(MODEL_ENVIRONMENT), Description = "The **environment** where is the model located")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(DocumentModel), Description = "The Custom Model definition")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
@@ -34,7 +34,7 @@ public class ValidateModelExists
                 return new BadRequestObjectResult("The modelId is required");
             }
 
-            FORM_RECOGNIZER_ENVIRONMENT formEnvironment;
+            MODEL_ENVIRONMENT formEnvironment;
             if (!Enum.TryParse(environment,out formEnvironment))
             {
                 return new BadRequestObjectResult("The environment is invalid");

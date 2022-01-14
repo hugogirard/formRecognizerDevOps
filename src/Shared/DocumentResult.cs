@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace DemoForm;
+namespace Demo.Shared.Models;
 
 public class DocumentResult
 {

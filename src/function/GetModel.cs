@@ -16,7 +16,7 @@ public class GetModel
     [FunctionName("GetModel")]
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-    [OpenApiParameter(name: "environment", In = ParameterLocation.Query, Required = true, Type = typeof(FORM_RECOGNIZER_ENVIRONMENT), Description = "The environment to get the models")]
+    [OpenApiParameter(name: "environment", In = ParameterLocation.Query, Required = true, Type = typeof(MODEL_ENVIRONMENT), Description = "The environment to get the models")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(List<ModelInfo>), Description = "The models in the environment")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
@@ -29,7 +29,7 @@ public class GetModel
             if (string.IsNullOrEmpty(environment))
                 return new BadRequestObjectResult("The Environment query string cannot be null");
 
-            FORM_RECOGNIZER_ENVIRONMENT formEnvironment;
+            MODEL_ENVIRONMENT formEnvironment;
             if (!Enum.TryParse(environment, out formEnvironment))
                 return new BadRequestObjectResult("The Environment query string is invalid");
 

@@ -14,11 +14,11 @@
     private SelectEnvironment SelectEnvironment = new();
 
     [Parameter]
-    public EventCallback<ModelEnvironment> OnEnvironmentChanged { get; set; }
+    public EventCallback<MODEL_ENVIRONMENT> OnEnvironmentChanged { get; set; }
 
     async Task OnSelectionChanged(string value)
     {
-        ModelEnvironment onSelectedModelEnvironment;
+        MODEL_ENVIRONMENT onSelectedModelEnvironment;
         if (Enum.TryParse(value, out onSelectedModelEnvironment))
         {
             SelectEnvironment.SelectedEnvironment = value;

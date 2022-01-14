@@ -16,54 +16,47 @@ public class ModelService : IModelService
         FUNCTION_CODE = configuration["FunctionKeyCode"];
     }
 
-    public async Task<IList<ModelDefinition>> GetModelsAsync(ModelEnvironment environment)
+    public async Task<IList<ModelInfo>> GetModelsAsync(MODEL_ENVIRONMENT environment)
     {
         string url = $"{BASE_URL}/GetModel?environment={environment}";
 
         HttpResponseMessage response = await SendRequestAsync(url, HttpMethod.Get);
 
-        //var request = new HttpRequestMessage(HttpMethod.Get, url);
-        //request.Headers.Add("x-functions-key", FUNCTION_CODE);
-
-        //var client = _httpClientfactory.CreateClient();
-
-        //var response = await client.SendAsync(request);
-
         if (response.IsSuccessStatusCode)
         {
             string json = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<IList<ModelDefinition>>(json,new JsonSerializerOptions 
+            return JsonSerializer.Deserialize<IList<ModelInfo>>(json,new JsonSerializerOptions 
             { 
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
 
         }
 
-        return new List<ModelDefinition>();
+        return new List<ModelInfo>();
     }
-    public async Task<bool> DeleteModelAsync(string modelId, ModelEnvironment environment)
+    public async Task<bool> DeleteModelAsync(string modelId, MODEL_ENVIRONMENT environment)
     {
         string url = $"{BASE_URL}/DeleteModel";
-        var request = new HttpRequestMessage(HttpMethod.Delete, url);
-        request.Headers.Add("x-functions-key", FUNCTION_CODE);
-
+             
         dynamic payload = new ExpandoObject();
         payload.modelId = modelId;
         payload.environment = environment;
 
-        request.Content = new StringContent(JsonSerializer.Serialize(payload,new JsonSerializerOptions 
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        }));
-        var client = _httpClientfactory.CreateClient();
-
-        var response = await client.DeleteAsync(url);
+        HttpResponseMessage response = await SendRequestAsync(url, HttpMethod.Delete, payload);
 
         if (response.IsSuccessStatusCode)
             return true;
 
         return false;
+    }
+
+    public async Task AnalyzeDocumentAsync(string documentUrl,string modelId, MODEL_ENVIRONMENT environment)
+    {
+
+        string url = $"{BASE_URL}/AnalyzeDocument";
+
+        
     }
 
     private async Task<HttpResponseMessage> SendRequestAsync(string url, HttpMethod method) 
@@ -86,4 +79,6 @@ public class ModelService : IModelService
         var client = _httpClientfactory.CreateClient();
         return await client.SendAsync(request);
     }
+
+
 }

@@ -1,5 +1,6 @@
 ﻿@page "/"
 
+
 @inject IModelService _modelService
 @inject IJSRuntime _jsRuntime
 
@@ -56,10 +57,10 @@
 @code {
     private bool IsLoading = false;
 
-    private IList<ModelDefinition> Models;
-    private ModelEnvironment SelectedEnvironment;
+    private IList<ModelInfo> Models;
+    private MODEL_ENVIRONMENT SelectedEnvironment;
 
-    async Task OnEnvironmentChanged(ModelEnvironment environment)
+    async Task OnEnvironmentChanged(MODEL_ENVIRONMENT environment)
     {
         IsLoading = true;
         SelectedEnvironment = environment;
@@ -67,7 +68,7 @@
         IsLoading = false;
     }
 
-    async Task OnDeleteModel(ModelDefinition model)
+    async Task OnDeleteModel(ModelInfo model)
     {
         bool confirmed = await _jsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the model {model.ModelId}");
         if (confirmed)

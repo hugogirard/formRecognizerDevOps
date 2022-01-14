@@ -1,6 +1,7 @@
 ﻿
+using Azure.AI.FormRecognizer.DocumentAnalysis;
 
-namespace DemoForm;
+namespace Demo.Shared.Models;
 
 public class ModelInfo
 {
@@ -9,6 +10,11 @@ public class ModelInfo
     public string Description { get; }
 
     public DateTimeOffset CreatedOn { get; set; }
+
+    public ModelInfo()
+    {
+
+    }
 
     public ModelInfo(DocumentModelInfo documentModelInfo)
     {
