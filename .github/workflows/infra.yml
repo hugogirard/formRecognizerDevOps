@@ -30,11 +30,11 @@ env:
   LOCATION: 'eastus'
 
 jobs:
-  create-dev-environment:
+  create-dev-environment:  
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
     with:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
-      location: ${{ env.LOCATION }}
+      location: 'eastus'
       environmentName: 'dev'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
@@ -44,7 +44,7 @@ jobs:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
     with:
       resourceGroupName: 'rg-form-recognizer-devops-qa'
-      location: ${{ env.LOCATION }}     
+      location: 'eastus'     
       environmentName: 'qa'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
@@ -54,7 +54,7 @@ jobs:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
     with:
       resourceGroupName: 'rg-form-recognizer-devops-prod'
-      location: ${{ env.LOCATION }}   
+      location: 'eastus'   
       environmentName: 'prod'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
