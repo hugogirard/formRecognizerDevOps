@@ -75,25 +75,6 @@ Now create all the following secrets
 | ----- | -----
 | AZURE_CREDENTIALS | The value from the step before when creating the service principal.
 | SUBSCRIPTION_ID | The ID of the subscription where all the resources will be created
-| SP_PRINCIPAL_OBJECT_ID | The objectId of the Service Principal created before
-
-To find the SP_PRINCIPAL_OBJECT_ID you can go into you Azure Active Directory.
-
-Next in the left menu go to **Enterprise applications**.
-
-![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/ent.png)
-
-Now, select All Applications
-
-![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/all.png)
-
-In the search bar enter the name of the service principal created before, for example in this case it was sp-gh-action.
-
-![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/appent.png)
-
-Click on your Service Principal and copy the value Object ID for the secret in Github called **SP_PRINCIPAL_OBJECT_ID**.
-
-![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/spdetails.png)
 
 ## Create the environment in Github
 
