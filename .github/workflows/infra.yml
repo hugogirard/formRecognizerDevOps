@@ -21,9 +21,6 @@
 name: Create Azure Resources
 
 on:  
-  # push:
-  #   branches:
-  #     - refactoring
   workflow_dispatch:
 
 env:
@@ -31,7 +28,7 @@ env:
 
 jobs:
   create-dev-environment:  
-    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
       location: 'eastus'
@@ -41,7 +38,7 @@ jobs:
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
 
   create-qa-environment:
-    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-qa'
       location: 'eastus'     
@@ -51,7 +48,7 @@ jobs:
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}      
 
   create-prod-environment:
-    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@refactoring
+    uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-prod'
       location: 'eastus'   

@@ -3,6 +3,7 @@
 @inject IStateService _stateService
 @inject IModelService _modelService
 
+<Loading IsLoading="Loading" />
 
 <div class="row">
     <div class="col-md-4">
@@ -21,7 +22,7 @@
 
 @if (!string.IsNullOrEmpty(_filePath))
 {
-    <div class="row">
+    <div class="row" style="margin-top:20px">
         <div class="col-md-3">
             <button class="btn btn-primary" @onclick="@(async() => await OnAnalyzeDocumentAsync())">
                 Analyze
@@ -30,12 +31,19 @@
     </div>    
 }
 
+@if (DocumentResults != null)
+{
+    <DocumentLayout DocumentResult="DocumentResults" />
+}
+
 
 @code {
     private string _filePath = string.Empty;
     private string ModelId = string.Empty;
     private string Environment = string.Empty;
     private IEnumerable<DocumentResult> DocumentResults;
+
+    private bool Loading = false;
 
     protected override Task OnInitializedAsync()
     {
@@ -64,8 +72,22 @@
 
     private async Task OnAnalyzeDocumentAsync()
     {
-        DocumentResults = await _modelService.AnalyzeDocumentAsync(_filePath, 
-                                                                   _stateService.SelectedModel.ModelId, 
-                                                                   _stateService.SelectedEnvironment);
+        Loading = true;
+        try
+        {
+            DocumentResults = await _modelService.AnalyzeDocumentAsync(_filePath, 
+                                                                       _stateService.SelectedModel.ModelId, 
+                                                                       _stateService.SelectedEnvironment);
+        }
+        catch
+        {
+
+        }
+        finally
+        {
+            Loading = false;
+        }
+
+
     }
 }
