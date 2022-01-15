@@ -1,5 +1,7 @@
 ﻿@inject IFileServiceStorage _fileServiceStorage
 
+<Loading IsLoading="Loading" />
+
 @if (ShowError)
 {
     <div class="alert alert-danger" role="alert">
@@ -7,12 +9,10 @@
     </div>    
 }
 
-
-
 @if (ShowPreview)
 {    
     <div class="image-container">
-        <embed type="application/pdf" src="@ImageUrl" class="preview-image" style="width:100%;height: 400px" />   
+        <embed type="application/pdf"src="@ImagePreview" class="preview-image" style="width:100%;height: 400px" />   
     </div>                            
 }
 
@@ -21,9 +21,9 @@
 @code {
 
     private bool ShowPreview = false;
-    private bool ShowError = false;
-    private string ImageUrl;
+    private bool ShowError = false;    
     private string ErrorMsg;
+    private string ImagePreview;
 
     private bool Loading = false;    
 
@@ -45,26 +45,44 @@
             ShowError = true;
             return;
         }
-        else if (e.File.ContentType.ToLower() != "pdf")
+        else if (!e.File.ContentType.ToLower().Contains("pdf"))
         {
             ShowError = true;
             ErrorMsg = "Unsupported file, only pdf are supported";
             return;
         }
-        else if (e.File.ContentType.Contains("pdf"))
-        {            
-            ShowPreview = true;
+
+        try
+        {
+            Loading = true;
+            string imageUrl;
+
             using (var fileStream = e.File.OpenReadStream(MaxFileSize))
             using (var memoryStream = new MemoryStream())
             {
                 await fileStream.CopyToAsync(memoryStream);
-
+                memoryStream.Position = 0;
                 Uri filePath = await _fileServiceStorage.UploadAsync(memoryStream);
-
-                ImageUrl = filePath.ToString();
+                memoryStream.Position = 0;
+                var imageFileBytes = memoryStream.ToArray();
+                ImagePreview = string.Concat("data:application/pdf;base64,", Convert.ToBase64String(memoryStream.ToArray()));
+                imageUrl = filePath.ToString();
+                ShowPreview = true;
+                ShowError = false;
             }
 
-            await OnFileUpload.InvokeAsync(ImageUrl);
+            await OnFileUpload.InvokeAsync(imageUrl);
         }
+        catch (Exception ex)
+        {
+            ShowPreview = false;
+            ShowError = true;
+            ErrorMsg = "Cannot upload the file to storage";
+        }
+        finally
+        {
+            Loading = false;
+        }
+
     }
 }

@@ -9,8 +9,7 @@ namespace FormBlazorClient.Service;
 public class FileServiceStorage : IFileServiceStorage
 {
     private readonly BlobContainerClient _container;
-    private UserDelegationKey _userDelegationKey;
-
+    
     public FileServiceStorage(IConfiguration configuration)
     {
         _container = new BlobContainerClient(configuration["UploadStorage"],
@@ -25,21 +24,10 @@ public class FileServiceStorage : IFileServiceStorage
 
         await blob.UploadAsync(content);
 
-        BlobServiceClient blobServiceClient = blob.GetParentBlobContainerClient().GetParentBlobServiceClient();
-
-        if (DateTimeOffset.UtcNow > _userDelegationKey?.SignedExpiresOn)
-        {
-            // Get a user delegation key for the Blob service that's valid for 7 hours.
-            // You can use the key to generate any number of shared access signatures 
-            // over the lifetime of the key.
-            _userDelegationKey = await blobServiceClient.GetUserDelegationKeyAsync(DateTimeOffset.UtcNow,
-                                                                                   DateTimeOffset.UtcNow.AddHours(7));
-        }
-
         // Generate a SAS token valid for 1 hour
         var sasBuilder = new BlobSasBuilder()
-        {
-            BlobContainerName = blob.BlobContainerName,
+        {            
+            BlobContainerName = blob.GetParentBlobContainerClient().Name,
             BlobName = blob.Name,
             Resource = "b",
             StartsOn = DateTimeOffset.UtcNow,
@@ -49,14 +37,7 @@ public class FileServiceStorage : IFileServiceStorage
         // Specify read and write permissions for the SAS.
         sasBuilder.SetPermissions(BlobSasPermissions.Read);
 
+        return blob.GenerateSasUri(sasBuilder);
 
-        BlobUriBuilder blobUriBuilder = new BlobUriBuilder(blob.Uri)
-        {
-            // Specify the user delegation key.
-            Sas = sasBuilder.ToSasQueryParameters(_userDelegationKey,
-                                                  blobServiceClient.AccountName)
-        };
-
-        return blobUriBuilder.ToUri();
     }
 }
