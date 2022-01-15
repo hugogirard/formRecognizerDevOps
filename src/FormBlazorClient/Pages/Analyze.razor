@@ -1,0 +1,12 @@
+﻿@page "/analyze"
+
+<FileUpload OnFileUpload="OnFileUploaded"/>
+
+@code {
+    private string _filePath = string.Empty;
+
+    private void OnFileUploaded(string filePath)
+    {
+        _filePath = filePath;
+    }
+}

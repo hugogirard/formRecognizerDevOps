@@ -5,9 +5,9 @@ namespace Demo.Shared.Models;
 
 public class ModelInfo
 {
-    public string ModelId { get; }
+    public string ModelId { get; set; }
 
-    public string Description { get; }
+    public string Description { get; set; }
 
     public DateTimeOffset CreatedOn { get; set; }
 

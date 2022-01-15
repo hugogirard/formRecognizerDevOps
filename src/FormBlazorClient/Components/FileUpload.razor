@@ -1,0 +1,70 @@
+﻿@inject IFileServiceStorage _fileServiceStorage
+
+@if (ShowError)
+{
+    <div class="alert alert-danger" role="alert">
+        @ErrorMsg  
+    </div>    
+}
+
+
+
+@if (ShowPreview)
+{    
+    <div class="image-container">
+        <embed type="application/pdf" src="@ImageUrl" class="preview-image" style="width:100%;height: 400px" />   
+    </div>                            
+}
+
+<InputFile id="inputFileBlazor" OnChange="ViewImage" />
+
+@code {
+
+    private bool ShowPreview = false;
+    private bool ShowError = false;
+    private string ImageUrl;
+    private string ErrorMsg;
+
+    private bool Loading = false;    
+
+    [Parameter]
+    public EventCallback<string> OnFileUpload { get; set; }
+
+    const string DefaultStatus = "Maximum size allowed for the image is 4 MB";
+    protected string status = DefaultStatus;
+    const int MaxFileSize = 4 * 1024 * 1024; // 4MB    
+
+    protected async Task ViewImage(InputFileChangeEventArgs e)
+    {
+        ShowError = false;
+        ErrorMsg = string.Empty;
+
+        if (e.File.Size > MaxFileSize)
+        {
+            ErrorMsg = $"The file size is {e.File.Size} bytes, this is more than the allowed limit of {MaxFileSize} bytes.";
+            ShowError = true;
+            return;
+        }
+        else if (e.File.ContentType.ToLower() != "pdf")
+        {
+            ShowError = true;
+            ErrorMsg = "Unsupported file, only pdf are supported";
+            return;
+        }
+        else if (e.File.ContentType.Contains("pdf"))
+        {            
+            ShowPreview = true;
+            using (var fileStream = e.File.OpenReadStream(MaxFileSize))
+            using (var memoryStream = new MemoryStream())
+            {
+                await fileStream.CopyToAsync(memoryStream);
+
+                Uri filePath = await _fileServiceStorage.UploadAsync(memoryStream);
+
+                ImageUrl = filePath.ToString();
+            }
+
+            await OnFileUpload.InvokeAsync(ImageUrl);
+        }
+    }
+}
