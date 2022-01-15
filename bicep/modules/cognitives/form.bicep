@@ -36,9 +36,6 @@ resource frmRecognizer 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
     'description': 'frm-devops-demo-tag-${subscription().subscriptionId}'
   }
   kind: 'FormRecognizer'
-  // identity: {
-  //   type: 'SystemAssigned'
-  // }
   properties: {
     customSubDomainName: frmName
     publicNetworkAccess: 'Enabled'
@@ -51,7 +48,4 @@ resource frmRecognizer 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
   }
 }
 
-output frmEndpoint string = frmRecognizer.properties.endpoint
-output frmRecognizerId string = frmRecognizer.id
-output frmRecognizerVersion string = frmRecognizer.apiVersion
-//output frmKey string = listKeys(frmRecognizer.id,frmRecognizer.apiVersion).key1
+output formRecognizerName string = frmRecognizer.name

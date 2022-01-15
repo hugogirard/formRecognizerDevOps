@@ -19,15 +19,13 @@
 * DEMO POC - "AS IS"
 */
 
-param suffix string
+
 param location string
 param environment string
-
-// var strAcccountNameFunc = 'strf${suffix}'
-var strAccountNameDoc = '${toLower(environment)}${suffix}'
+param name string
 
 resource storageAccountDocument 'Microsoft.Storage/storageAccounts@2021-04-01' = {
-  name: strAccountNameDoc
+  name: name
   location: location
   sku: {
     name: 'Standard_LRS'    
@@ -52,6 +50,13 @@ resource storageAccountDocument 'Microsoft.Storage/storageAccounts@2021-04-01' =
       keySource: 'Microsoft.Storage'
     }
     accessTier: 'Hot'
+  }
+}
+
+resource containerDocuments 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {
+  name: '${storageAccountDocument.name}/default/model'
+  properties: {
+    publicAccess: 'None'
   }
 }
 

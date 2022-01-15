@@ -1,12 +1,12 @@
-param formRecognizerDevEndpoint string
-param formRecognizerQAEndpoint string
-param formRecognizerProdEndpoint string
 
-param formRecognizerDevKey string
-param formRecognizerQAKey string
-param formRecognizerProdKey string
+param devStorageName string
+param devFormRecognizerName string
+param qaFormRecognizerName string
+param prodFormRecognizerName string
 
-param devStorageCnxString string
+param devResourceGroupName string
+param qaResourceGroupName string
+param prodResourceGroupName string
 
 var location = resourceGroup().location
 var suffix = uniqueString(resourceGroup().id)
@@ -32,19 +32,22 @@ module function 'modules/function/function.bicep' = {
   params: {
     appInsightCnxString: insight.outputs.appInsightCnxString
     appInsightKey: insight.outputs.appInsightKey
-    formRecognizerDevEndpoint: formRecognizerDevEndpoint
-    formRecognizerDevKey: formRecognizerDevKey
-    formRecognizerProdEndpoint: formRecognizerProdEndpoint
-    formRecognizerProdKey: formRecognizerProdKey
-    formRecognizerQAEndpoint: formRecognizerQAEndpoint
-    formRecognizerQAKey: formRecognizerQAKey
     location: location
+    devStorageName: devStorageName
+    devFormRecognizerName: devFormRecognizerName
+    qaFormRecognizerName: qaFormRecognizerName
+    prodFormRecognizerName: prodFormRecognizerName
+    devResourceGroupName: devResourceGroupName
+    qaResourceGroupName: qaResourceGroupName
+    prodResourceGroupName: prodResourceGroupName
     strAccountApiVersion: storage.outputs.strAccountApiVersion
     strAccountId: storage.outputs.strAccountId
-    strAccountName: storage.outputs.strAccountName
-    suffix: suffix
-    devStorageCnxString: devStorageCnxString
+    strAccountName: storage.outputs.strAccountName    
+    suffix: suffix    
   }
 }
 
 output functionName string = function.outputs.functionName
+output functionHostname string = function.outputs.functionHostname
+output storageName string = storage.outputs.strAccountName
+output appInsightName string = insight.outputs.appInsightName

@@ -8,6 +8,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IModelService,ModelService>();
+builder.Services.AddSingleton<IFileServiceStorage, FileServiceStorage>();
+builder.Services.AddSingleton<IStateService, StateService>();
 
 var app = builder.Build();
 

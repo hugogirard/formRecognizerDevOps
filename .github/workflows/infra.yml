@@ -22,18 +22,20 @@ name: Create Azure Resources
 
 on:  
   workflow_dispatch:
-          
+
+env:
+  LOCATION: 'eastus'
+
 jobs:
-  create-dev-environment:
+  create-dev-environment:  
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-dev'
-      location: 'eastus'      
+      location: 'eastus'
       environmentName: 'dev'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
       subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      sp_identity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
 
   create-qa-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
@@ -43,47 +45,29 @@ jobs:
       environmentName: 'qa'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
-      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      sp_identity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
+      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}      
 
   create-prod-environment:
     uses: hugogirard/formRecognizerDevOps/.github/workflows/create-resources.yml@main
     with:
       resourceGroupName: 'rg-form-recognizer-devops-prod'
-      location: 'eastus'     
+      location: 'eastus'   
       environmentName: 'prod'      
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS  }}
-      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
-      sp_identity: ${{ secrets.SP_PRINCIPAL_OBJECT_ID  }}      
-
-  # give-vault-access-service-principal:
-  #   needs: [create-dev-environment, create-qa-environment, create-prod-environment]
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-
-  #     - name: Azure Login
-  #       uses: Azure/login@v1
-  #       with:
-  #         creds: ${{ secrets.azure_credentials }}  
-
-  #     - name: Give SP Dev Access Vault
-  #       run: az keyvault set-policy -n ${{ needs.create-dev-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
-
-  #     - name: Give SP QA Access Vault
-  #       run: az keyvault set-policy -n ${{ needs.create-qa-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}
-
-  #     - name: Give SP Prod Access Vault
-  #       run: az keyvault set-policy -n ${{ needs.create-prod-environment.outputs.keyVaultName }} --secret-permissions get list --spn ${{ secrets.SP_PRINCIPAL_OBJECT_ID }}                
+      subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}         
   
   create-deploy-azure-function:
     needs: [create-dev-environment, create-qa-environment, create-prod-environment ]
     runs-on: ubuntu-latest
 
+    outputs:
+      storageName: ${{ steps.armDeployment.outputs.storageName }}
+      appInsightName: ${{ steps.armDeployment.outputs.appInsightName }}
+      functionHostname: ${{ steps.armDeployment.outputs.appInsightName.functionHostname }}
+
     env:
-      RG_NAME: 'rg-form-recognizer-devops-utility'
-      LOCATION: 'eastus'      
+      RG_NAME: 'rg-form-recognizer-devops-utility'           
       AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/function'    
       DOTNET_VERSION: '6.0.x'              
 
@@ -98,25 +82,7 @@ jobs:
       - name: Create Resource Group
         run: |
           az group create -n ${{ env.RG_NAME }} -l ${{ env.LOCATION }}
-
-      - uses: Azure/get-keyvault-secrets@v1
-        id: devSecretVault
-        with:
-          keyvault: ${{ needs.create-dev-environment.outputs.keyvaultName }}
-          secrets: 'storageCnxString, frmEndpoint, frmKey'
-
-      - uses: Azure/get-keyvault-secrets@v1
-        id: qaSecretVault
-        with:
-          keyvault: ${{ needs.create-qa-environment.outputs.keyvaultName }}
-          secrets: 'storageCnxString, frmEndpoint, frmKey'
-
-      - uses: Azure/get-keyvault-secrets@v1
-        id: prodSecretVault
-        with:
-          keyvault: ${{ needs.create-prod-environment.outputs.keyvaultName }}
-          secrets: 'storageCnxString, frmEndpoint, frmKey'          
-
+  
       - name: Replace tokens
         uses: cschleiden/replace-tokens@v1.0
         with:        
@@ -124,13 +90,13 @@ jobs:
           tokenSuffix: __        
           files: '["bicep/utility.parameters.json"]'
         env:
-          formRecognizerDevEndpoint: ${{ steps.devSecretVault.outputs.frmEndpoint }}
-          formRecognizerQAEndpoint: ${{ steps.qaSecretVault.outputs.frmEndpoint }}
-          formRecognizerProdEndpoint: ${{ steps.prodSecretVault.outputs.frmEndpoint }}
-          formRecognizerDevKey: ${{ steps.devSecretVault.outputs.frmKey }}
-          formRecognizerQAKey: ${{ steps.qaSecretVault.outputs.frmKey }}
-          formRecognizerProdKey: ${{ steps.prodSecretVault.outputs.frmKey}}
-          devStorageCnxString: ${{ steps.devSecretVault.outputs.storageCnxString }}
+          devStorageName: ${{ needs.create-dev-environment.outputs.storageName }}
+          devFormRecognizerName: ${{ needs.create-dev-environment.outputs.formRecognizerName }}
+          qaFormRecognizerName: ${{ needs.create-qa-environment.outputs.formRecognizerName  }}
+          prodFormRecognizerName: ${{ needs.create-prod-environment.outputs.formRecognizerName  }}
+          devResourceGroupName: 'rg-form-recognizer-devops-dev'
+          qaResourceGroupName: 'rg-form-recognizer-devops-qa'
+          prodResourceGroupName: 'rg-form-recognizer-devops-prod'
 
       - name: Deploy Azure Resources
         id: armDeployment
@@ -157,4 +123,61 @@ jobs:
         uses: Azure/functions-action@v1        
         with:
           app-name: ${{ steps.armDeployment.outputs.functionName }}
-          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'     
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+
+      - name: logout
+        run: |
+          az logout              
+
+  create-deploy-blazor:
+    needs: create-deploy-azure-function
+    runs-on: ubuntu-latest
+
+    env:
+      RG_NAME: 'rg-form-recognizer-devops-utility'         
+      AZURE_WEBAPP_PACKAGE_PATH: 'src/FormBlazorClient'    
+      DOTNET_VERSION: '6.0.x'              
+
+    steps:
+      
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.azure_credentials }}
+
+      - name: Convert to ARM template
+        run: |
+          bicep build ./bicep/web.bicep
+
+      - name: Deploy Azure Resources
+        id: armDeployment
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.subscriptionId }}
+          resourceGroupName: ${{ env.RG_NAME }}
+          template: ./bicep/web.json
+          parameters: location=${{ env.LOCATION }} strName=${{ needs.create-deploy-azure-function.outputs.storageName }} appInsightName=${{ needs.create-deploy-azure-function.outputs.appInsightName }} functionHostname=${{ needs.create-deploy-azure-function.outputs.functionHostname }}
+
+      - name: Setup DotNet 6.0.X Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: dotnet build and publish
+        run: |
+          pushd './${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish -c Release -o output          
+
+      - name: 'Run Azure webapp deploy action using publish profile credentials'
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: ${{ steps.armDeployment.outputs.webAppName }}
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/output' 
+
+      - name: logout
+        run: |
+          az logout            

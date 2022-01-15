@@ -4,16 +4,16 @@ namespace DemoForm;
 
 public class FormClientFactory : IFormClientFactory
 {
-    private readonly Dictionary<FORM_RECOGNIZER_ENVIRONMENT, DocumentModelAdministrationClient> _adminClients;
-    private readonly Dictionary<FORM_RECOGNIZER_ENVIRONMENT, DocumentAnalysisClient> _analysisClients;
+    private readonly Dictionary<MODEL_ENVIRONMENT, DocumentModelAdministrationClient> _adminClients;
+    private readonly Dictionary<MODEL_ENVIRONMENT, DocumentAnalysisClient> _analysisClients;
 
     public FormClientFactory()
     {
-        _adminClients = new Dictionary<FORM_RECOGNIZER_ENVIRONMENT, DocumentModelAdministrationClient>();
-        _analysisClients = new Dictionary<FORM_RECOGNIZER_ENVIRONMENT, DocumentAnalysisClient>();
+        _adminClients = new Dictionary<MODEL_ENVIRONMENT, DocumentModelAdministrationClient>();
+        _analysisClients = new Dictionary<MODEL_ENVIRONMENT, DocumentAnalysisClient>();
     }
 
-    public DocumentModelAdministrationClient CreateAdministrationClient(FORM_RECOGNIZER_ENVIRONMENT env)
+    public DocumentModelAdministrationClient CreateAdministrationClient(MODEL_ENVIRONMENT env)
     {
         if (_adminClients.ContainsKey(env))
         {
@@ -30,7 +30,7 @@ public class FormClientFactory : IFormClientFactory
         return trainingClient;
     }
 
-    public DocumentAnalysisClient CreateAnalysisClient(FORM_RECOGNIZER_ENVIRONMENT env)
+    public DocumentAnalysisClient CreateAnalysisClient(MODEL_ENVIRONMENT env)
     {
         if (_analysisClients.ContainsKey(env))
         {
@@ -47,16 +47,16 @@ public class FormClientFactory : IFormClientFactory
         return client;
     }
 
-    private AzureKeyCredential GetAzureCredentials(FORM_RECOGNIZER_ENVIRONMENT env) 
+    private AzureKeyCredential GetAzureCredentials(MODEL_ENVIRONMENT env) 
     {        
         string formRecognizerKey;
 
         switch (env)
         {
-            case FORM_RECOGNIZER_ENVIRONMENT.DEV:                
+            case MODEL_ENVIRONMENT.DEV:                
                 formRecognizerKey = Environment.GetEnvironmentVariable("FormRecognizerDevKey");
                 break;
-            case FORM_RECOGNIZER_ENVIRONMENT.QA:     
+            case MODEL_ENVIRONMENT.QA:     
                 formRecognizerKey = Environment.GetEnvironmentVariable("FormRecognizerQaKey");
                 break;
             default:                
@@ -67,16 +67,16 @@ public class FormClientFactory : IFormClientFactory
         return new AzureKeyCredential(formRecognizerKey);
     }
 
-    private string GetFormRecognizerEndpoint(FORM_RECOGNIZER_ENVIRONMENT env) 
+    private string GetFormRecognizerEndpoint(MODEL_ENVIRONMENT env) 
     {
         string formRecognizerEndpoint;
         
         switch (env)
         {
-            case FORM_RECOGNIZER_ENVIRONMENT.DEV:
+            case MODEL_ENVIRONMENT.DEV:
                 formRecognizerEndpoint = Environment.GetEnvironmentVariable("FormRecognizerDevEndpoint");        
                 break;
-            case FORM_RECOGNIZER_ENVIRONMENT.QA:
+            case MODEL_ENVIRONMENT.QA:
                 formRecognizerEndpoint = Environment.GetEnvironmentVariable("FormRecognizerQaEndpoint");                
                 break;
             default:

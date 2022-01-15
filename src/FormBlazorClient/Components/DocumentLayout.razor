@@ -1,0 +1,44 @@
+﻿
+@if (DocumentResult != null)
+{
+    @foreach (var documentResult in DocumentResult)
+    {
+        <div class="row" style="margin-top:30px">
+            <div class="col-md-12">
+                DocType: @documentResult.DocType
+            </div>
+        </div>
+
+        <div class=row  style="margin-top:15px">
+            <div class=col-md-12>
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">FieldName</th>
+                        <th scope="col">Content</th>
+                        <th scope="col">Confidence</th> 
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach(var field in documentResult.Fields)
+                    {
+                        <tr>
+                            <td>@field.FieldName</td>
+                            <td>@field.Content</td>
+                            <td>@field.Confidence</td>
+                        </tr>        
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>   
+
+    }   
+}
+  
+
+@code {
+
+    [Parameter]
+    public IEnumerable<DocumentResult> DocumentResult { get; set; }
+}

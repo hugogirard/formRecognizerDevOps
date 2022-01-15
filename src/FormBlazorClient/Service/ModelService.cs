@@ -16,51 +16,84 @@ public class ModelService : IModelService
         FUNCTION_CODE = configuration["FunctionKeyCode"];
     }
 
-    public async Task<IList<ModelDefinition>> GetModelsAsync(ModelEnvironment environment)
+    public async Task<IList<ModelInfo>> GetModelsAsync(MODEL_ENVIRONMENT environment)
     {
         string url = $"{BASE_URL}/GetModel?environment={environment}";
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add("x-functions-key", FUNCTION_CODE);
 
-        var client = _httpClientfactory.CreateClient();
-
-        var response = await client.SendAsync(request);
+        HttpResponseMessage response = await SendRequestAsync(url, HttpMethod.Get);
 
         if (response.IsSuccessStatusCode)
         {
             string json = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<IList<ModelDefinition>>(json,new JsonSerializerOptions 
+            return JsonSerializer.Deserialize<IList<ModelInfo>>(json,new JsonSerializerOptions 
             { 
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
 
         }
 
-        return new List<ModelDefinition>();
+        return new List<ModelInfo>();
     }
-    public async Task<bool> DeleteModelAsync(string modelId, ModelEnvironment environment)
+    public async Task<bool> DeleteModelAsync(string modelId, MODEL_ENVIRONMENT environment)
     {
         string url = $"{BASE_URL}/DeleteModel";
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        request.Headers.Add("x-functions-key", FUNCTION_CODE);
-
+             
         dynamic payload = new ExpandoObject();
         payload.modelId = modelId;
         payload.environment = environment;
 
-        request.Content = new StringContent(JsonSerializer.Serialize(payload,new JsonSerializerOptions 
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        }));
-        var client = _httpClientfactory.CreateClient();
-
-        var response = await client.DeleteAsync(url);
+        HttpResponseMessage response = await SendRequestAsync(url, HttpMethod.Delete, payload);
 
         if (response.IsSuccessStatusCode)
             return true;
 
         return false;
+    }
+
+    public async Task<IEnumerable<DocumentResult>> AnalyzeDocumentAsync(string documentUrl,string modelId, MODEL_ENVIRONMENT environment)
+    {
+
+        string url = $"{BASE_URL}/AnalyzeDocument";
+
+        dynamic payload = new ExpandoObject();
+        payload.ModelId = modelId;
+        payload.Environment = environment;
+        payload.DocumentUrl = documentUrl;
+
+        HttpResponseMessage response = await SendRequestAsync(url,HttpMethod.Post,payload);
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        string json = await response.Content.ReadAsStringAsync();
+
+        return JsonSerializer.Deserialize<IEnumerable<DocumentResult>>(json, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+
+    }
+
+    private async Task<HttpResponseMessage> SendRequestAsync(string url, HttpMethod method) 
+    {
+        return await SendRequestAsync(url, method, null);
+    }
+
+    private async Task<HttpResponseMessage> SendRequestAsync(string url, HttpMethod method, dynamic? payload) 
+    {
+        var request = new HttpRequestMessage(method, url);
+        request.Headers.Add("x-functions-key", FUNCTION_CODE);
+        if (payload != null) 
+        {
+            request.Content = new StringContent(JsonSerializer.Serialize(payload, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            }));
+        }
+
+        var client = _httpClientfactory.CreateClient();
+        return await client.SendAsync(request);
     }
 
 

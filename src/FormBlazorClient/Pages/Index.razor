@@ -1,7 +1,9 @@
 ﻿@page "/"
 
 @inject IModelService _modelService
+@inject IStateService _stateService
 @inject IJSRuntime _jsRuntime
+@inject NavigationManager _navigationManager
 
 <h2>List of trained model in an environment</h2>
 
@@ -35,7 +37,7 @@
                         <td>@model.Description</td>
                         <td>@model.CreatedOn</td>
                         <td>
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" @onclick="(() => OnTestModel(model))">
                                 TEST
                             </button>
                         </td>
@@ -56,10 +58,10 @@
 @code {
     private bool IsLoading = false;
 
-    private IList<ModelDefinition> Models;
-    private ModelEnvironment SelectedEnvironment;
+    private IList<ModelInfo> Models;
+    private MODEL_ENVIRONMENT SelectedEnvironment;
 
-    async Task OnEnvironmentChanged(ModelEnvironment environment)
+    private async Task OnEnvironmentChanged(MODEL_ENVIRONMENT environment)
     {
         IsLoading = true;
         SelectedEnvironment = environment;
@@ -67,7 +69,7 @@
         IsLoading = false;
     }
 
-    async Task OnDeleteModel(ModelDefinition model)
+    private async Task OnDeleteModel(ModelInfo model)
     {
         bool confirmed = await _jsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the model {model.ModelId}");
         if (confirmed)
@@ -82,5 +84,12 @@
 
             IsLoading = false;
         }
+    }
+
+    private void OnTestModel(ModelInfo model)
+    {
+        _stateService.SelectedModel = model;
+        _stateService.SelectedEnvironment = SelectedEnvironment;
+        _navigationManager.NavigateTo("/analyze");
     }
 }

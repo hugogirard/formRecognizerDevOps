@@ -1,0 +1,93 @@
+﻿@page "/analyze"
+
+@inject IStateService _stateService
+@inject IModelService _modelService
+
+<Loading IsLoading="Loading" />
+
+<div class="row">
+    <div class="col-md-4">
+        ModelId: @ModelId
+    </div>
+    <div class="col-md-4">
+        Environment: @Environment
+    </div>
+</div>
+
+<div class="row" style="margin-top:15px">
+    <div class="col-md-6">
+        <FileUpload OnFileUpload="OnFileUploaded"/>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(_filePath))
+{
+    <div class="row" style="margin-top:20px">
+        <div class="col-md-3">
+            <button class="btn btn-primary" @onclick="@(async() => await OnAnalyzeDocumentAsync())">
+                Analyze
+            </button>
+        </div>
+    </div>    
+}
+
+@if (DocumentResults != null)
+{
+    <DocumentLayout DocumentResult="DocumentResults" />
+}
+
+
+@code {
+    private string _filePath = string.Empty;
+    private string ModelId = string.Empty;
+    private string Environment = string.Empty;
+    private IEnumerable<DocumentResult> DocumentResults;
+
+    private bool Loading = false;
+
+    protected override Task OnInitializedAsync()
+    {
+        ModelId = _stateService.SelectedModel.ModelId;
+
+        switch (_stateService.SelectedEnvironment)
+        {
+            case MODEL_ENVIRONMENT.DEV:
+                Environment = "DEV";
+                break;
+            case MODEL_ENVIRONMENT.QA:
+                Environment = "QA";
+                break;
+            case MODEL_ENVIRONMENT.PROD:
+                Environment = "PROD";
+                break;
+        }
+
+        return base.OnInitializedAsync();
+    }
+
+    private void OnFileUploaded(string filePath)
+    {
+        _filePath = filePath;
+    }
+
+    private async Task OnAnalyzeDocumentAsync()
+    {
+        Loading = true;
+        try
+        {
+            DocumentResults = await _modelService.AnalyzeDocumentAsync(_filePath, 
+                                                                       _stateService.SelectedModel.ModelId, 
+                                                                       _stateService.SelectedEnvironment);
+        }
+        catch
+        {
+
+        }
+        finally
+        {
+            Loading = false;
+        }
+
+
+    }
+}

@@ -58,38 +58,6 @@ resource containerDocuments 'Microsoft.Storage/storageAccounts/blobServices/cont
   }
 }
 
-// resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' = if (environment == 'DEV') {
-//   name: '${storageAccountDocument.name}/default'
-//   properties: {
-//     cors: {
-//       corsRules: [
-//         {
-//           allowedOrigins: [
-//             '*'
-//           ]
-//           allowedMethods: [
-//             'DELETE'
-//             'GET'
-//             'HEAD'
-//             'MERGE'
-//             'POST'
-//             'OPTIONS'
-//             'PUT'
-//             'PATCH'
-//           ]
-//           exposedHeaders: [
-//             '*'
-//           ]
-//           allowedHeaders: [
-//             '*'
-//           ]
-//           maxAgeInSeconds: 200
-//         }
-//       ]
-//     }
-//   }
-// }
-
 output strAccountName string = storageAccountDocument.name
 output strAccountId string = storageAccountDocument.id
 output strAccountApiVersion string = storageAccountDocument.apiVersion

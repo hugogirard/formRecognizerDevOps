@@ -109,3 +109,17 @@ a, .btn-link {
     }
 
 /* End loading screen */
+
+.image-container {
+    display: flex;
+    padding: 15px;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed skyblue;
+}
+
+.preview-image {
+    max-height: 800px;
+    max-width: 800px;
+}
