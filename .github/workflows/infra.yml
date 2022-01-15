@@ -21,9 +21,9 @@
 name: Create Azure Resources
 
 on:  
-  push:
-    branches:
-      - refactoring
+  # push:
+  #   branches:
+  #     - refactoring
   workflow_dispatch:
 
 env:
