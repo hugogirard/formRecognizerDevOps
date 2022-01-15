@@ -1,12 +1,71 @@
 ﻿@page "/analyze"
 
-<FileUpload OnFileUpload="OnFileUploaded"/>
+@inject IStateService _stateService
+@inject IModelService _modelService
+
+
+<div class="row">
+    <div class="col-md-4">
+        ModelId: @ModelId
+    </div>
+    <div class="col-md-4">
+        Environment: @Environment
+    </div>
+</div>
+
+<div class="row" style="margin-top:15px">
+    <div class="col-md-6">
+        <FileUpload OnFileUpload="OnFileUploaded"/>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(_filePath))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <button class="btn btn-primary" @onclick="@(async() => await OnAnalyzeDocumentAsync())">
+                Analyze
+            </button>
+        </div>
+    </div>    
+}
+
 
 @code {
     private string _filePath = string.Empty;
+    private string ModelId = string.Empty;
+    private string Environment = string.Empty;
+    private IEnumerable<DocumentResult> DocumentResults;
+
+    protected override Task OnInitializedAsync()
+    {
+        ModelId = _stateService.SelectedModel.ModelId;
+
+        switch (_stateService.SelectedEnvironment)
+        {
+            case MODEL_ENVIRONMENT.DEV:
+                Environment = "DEV";
+                break;
+            case MODEL_ENVIRONMENT.QA:
+                Environment = "QA";
+                break;
+            case MODEL_ENVIRONMENT.PROD:
+                Environment = "PROD";
+                break;
+        }
+
+        return base.OnInitializedAsync();
+    }
 
     private void OnFileUploaded(string filePath)
     {
         _filePath = filePath;
+    }
+
+    private async Task OnAnalyzeDocumentAsync()
+    {
+        DocumentResults = await _modelService.AnalyzeDocumentAsync(_filePath, 
+                                                                   _stateService.SelectedModel.ModelId, 
+                                                                   _stateService.SelectedEnvironment);
     }
 }

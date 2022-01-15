@@ -51,12 +51,28 @@ public class ModelService : IModelService
         return false;
     }
 
-    public async Task AnalyzeDocumentAsync(string documentUrl,string modelId, MODEL_ENVIRONMENT environment)
+    public async Task<IEnumerable<DocumentResult>> AnalyzeDocumentAsync(string documentUrl,string modelId, MODEL_ENVIRONMENT environment)
     {
 
         string url = $"{BASE_URL}/AnalyzeDocument";
 
-        
+        dynamic payload = new ExpandoObject();
+        payload.ModelId = modelId;
+        payload.Environment = environment;
+        payload.DocumentUrl = documentUrl;
+
+        HttpResponseMessage response = await SendRequestAsync(url,HttpMethod.Post,payload);
+
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        string json = await response.Content.ReadAsStringAsync();
+
+        return JsonSerializer.Deserialize<IEnumerable<DocumentResult>>(json, new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+
     }
 
     private async Task<HttpResponseMessage> SendRequestAsync(string url, HttpMethod method) 

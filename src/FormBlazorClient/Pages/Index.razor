@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @inject IModelService _modelService
+@inject IStateService _stateService
 @inject IJSRuntime _jsRuntime
 @inject NavigationManager _navigationManager
 
@@ -87,6 +88,8 @@
 
     private void OnTestModel(ModelInfo model)
     {
+        _stateService.SelectedModel = model;
+        _stateService.SelectedEnvironment = SelectedEnvironment;
         _navigationManager.NavigateTo("/analyze");
     }
 }
