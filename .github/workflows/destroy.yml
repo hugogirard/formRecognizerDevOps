@@ -45,9 +45,15 @@ jobs:
   
       - name: Destroy resource group
         run: |
-         az group delete -n ${{ env.RG-DEV }} --yes
-         az group delete -n ${{ env.RG-QA }} --yes
-         az group delete -n ${{ env.RG-PROD }} --yes
+         if [ $(az group exists --name ${{ env.RG-DEV }}) = false ]; then
+           az group delete -n ${{ env.RG-DEV }} --yes  
+         fi        
+         if [ $(az group exists --name ${{ env.RG-QA }}) = false ]; then
+           az group delete -n ${{ env.RG-QA }} --yes  
+         fi        
+         if [ $(az group exists --name ${{ env.RG-PROD }}) = false ]; then
+           az group delete -n ${{ env.RG-PROD }} --yes  
+         fi                          
 
       - name: Get Form Recognizer Ids
         run: |
