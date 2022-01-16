@@ -163,7 +163,7 @@ Those secrets are needed to deploy your model between your different environment
 
 ### Function Copy Model Endpoint
 
-To find the endpoint of the FUNCTION_COPY_MODEL go to the resource group called **rg-form-recognizer-devops-utility**.
+To find the endpoint of the FUNCTION_COPY_MODEL_ENDPOINT go to the resource group called **rg-form-recognizer-devops-utility**.
 
 You will see an Azure Function with the name **func-form-<guid>**
 
@@ -175,7 +175,7 @@ Click on the left menu on Functions
 
 You will see all functions in the function app
 
-![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/funtions.png)
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/funtions2.png)
 
 Click on the CopyModel one and click on the button **Get Function Url** and copy the value in the Github Secret **FUNCTION_COPY_MODEL**
 
