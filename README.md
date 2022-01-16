@@ -1,3 +1,19 @@
+- [Introduction](#introduction)
+- [Architecture](#architecture)
+- [How to execute this sample](#how-to-execute-this-sample)
+  - [Fork the repository](#fork-the-repository)
+  - [Create Service Principal](#create-service-principal-to-run-the-github-actions)
+  - [Create the needed Github Secrets](#create-the-needed-github-secrets)
+  - [Create the environment in Github](#create-the-environment-in-github)
+  - [Run the infrastructure Github Action](#run-the-infrastructure-github-action)
+  - [Create new secrets](#create-new-secrets)
+    - [Function Copy Model Endpoint](#function-copy-model-endpoint)
+    - [Function Validate Endpoint](#function-validate-endpoint)
+    - [Function Train Model](#function-train-model)
+  - [Train the model](#train-the-model)
+  - [Copy the model in QA environment](#copy-the-model-in-qa-environment)
+- [Disclaimer](#disclaimer)
+
 # Introduction
 
 The goal of this sample is to provide an end-to-end scenario or to migrate your trained custom model in Form Recognizer between your different environments using CI/CD.
@@ -227,3 +243,9 @@ First, the github action will validate the model is present in the DEV environme
 As you can see, the approver you defined before in your PROD environment need to approve before the model is copied into PROD.
 
 You can now review the deployments and approve it. Once is done the model will be copied in the PROD environment.
+
+# Disclaimer
+
+The code in this repo is NOT production grade and lacks any automated testing. It is intentionally kept as simple as possible (KISS). Its primary purpose is demonstrating DevOps concept with Form Recognizer and not being a full fledged application that can be put into production as is.
+
+The author can in no way be held liable for damage caused directly or indirectly by using this code.
