@@ -16,40 +16,41 @@
 
 # Introduction
 
-The goal of this sample is to provide an end-to-end scenario or to migrate your trained custom model in Form Recognizer between your different environments using CI/CD.
+The goal of this sample is to provide an end-to-end scenario how to copy your trained custom model in Form Recognizer between your different environments using CI/CD.
 
 This example is using Github Actions but the same can be achieved using Azure DevOps or any other CI/CD tools.
 
-To facilitate the deployment and training of the custom model an **Azure Function** was developped.  This is not **MANDATORY**, you can do everything leveraging the Rest API of Form Recognizer and creating HTTP call in your pipeline using bash or powershell script.
-
-The function provide easier communication access leveraging the Form Recognizer SDK.
+To facilitate the deployment and training of the custom model a **Azure Function** was developed.  This is not **MANDATORY**, you can do everything using the Rest API of Form Recognizer and creating HTTP call in your pipeline.
 
 # Architecture
 
 ![architecture](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/diagram/architecture..drawio.svg)
 
-The sample contains 3 environments, **DEV**, **QA** and **Production**.
+The sample contains 3 environments, **DEV**, **QA** and **Production** represented by 3 different resource groups, one for each environment.
 
-In development, most of the time you will train the model using the [Form Labeling tool](https://docs.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/label-tool) (v2 of the API) or the [Form Recognizer Studio](https://docs.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/concept-form-recognizer-studio) for the newest version.
+Another resource group contains the Azure Function that is used for the CI/CD pipeline and the Blazor Web App.  This Azure Function is a REST API that provides endpoints to help with the copy between each environment and to test your trained model.  The Blazor Web App provides a UI to test documents for your trained models and retrieve your model between environments.
 
-This sample is using the most recent version of the Form Recognizer API (v3.0).  Once you model is trained using the UI tool is possible to save it in code source if needed.  
+In development, most of the time you will train the model using the [Form Labeling tool](https://docs.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/label-tool) (v2 of the API) or the [Form Recognizer Studio](https://docs.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/concept-form-recognizer-studio) for the newest version of the API.
 
-Saving your model in code source can be a good approach to keep a backup of your model in a **git** repository.  Keep in mind, **this won't save the trained model** but the document and tag and labelling needed to train your model.
+This sample is using the most recent version of Form Recognizer API (v3.0).  Once you model is trained using the UI tool is possible to save it in code source if needed.  
 
-In this sample, this is what it's done to train the model.
+Saving your model in code source can be a good practice to keep a backup of the assets to train your model in a **git** repository.
 
-This is the flow of our CI/CD.
+In this simple we use this approach.
+
+This is the DevOps flow illustrated in this sample.
 
 1) A user train the model with the assets needed calling the Azure Function. This step is not mandatory and the model can be trained using the Form Recognizer Tool.
 2) The previous step will create the trained model in the Development environment, once is done the user trigger the pipeline to copy the model into QA.  Before copying the model from DEV to QA the pipeline validates if the entered ID for the model is present in DEV.  
 3) If the previous step succeeds, the model is copied to QA.
 4) The team is now ready to test the model in the QA environment.
-5) The model is tested and ready to migrate to production, from there an approver need to approve the model to be copied from QA to Production.
+5) The model is tested and ready to migrate to production, from there an approver needs to approve the model to be copied from QA to Production.
 6) Once approved, the model is copied from QA to Production.
+7) The user can test the trained model using the Blazor Web App.
 
 # How to execute this sample
 
-This section will explain you how to run this sample into your own Azure tenant.
+This section will explain how to run this sample into your own Azure tenant.
 
 ## Fork the repository
 
@@ -59,13 +60,13 @@ To do so, click the Fork button in the top right menu.
 
 ![fork](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/fork.png)
 
-## Create service principal to run the Github actions
+## Create a service principal to run the Github actions
 
-To create the resources in Azure you will need to create a service principal that will be used in the infra pipeline.  To do this please follow this [link](https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret). Be sure to take note of the credential returned when creating the **service principal** you will need it for the next step.
+To create the resources in Azure you will need to create a service principal that will be used for each Github action.  To do this, follow this [link](https://github.com/marketplace/actions/azure-login#configure-a-service-principal-with-a-secret). Be sure to take note of the credential returned when creating the **service principal** you will need it for the next step.
 
-Because multiple resource groups will be create **don't create a scope at resource group level**.
+Because multiple resource groups will be created **don't create a scope at resource group level**.
 
-The command should look something like this
+The command should look something like this:
 
 ```
 az ad sp create-for-rbac --name "sp-gh-action" --role contributor --sdk-auth
@@ -73,7 +74,7 @@ az ad sp create-for-rbac --name "sp-gh-action" --role contributor --sdk-auth
 
 ## Create the needed Github Secrets
 
-The pipelines need to have some Github secrets to be created before execution.  To create the secrets, click the Settings in the menu.
+The actions need to have some Github secrets to be created before execution.  To create the secrets, click the **Settings** in the menu.
 
 ![settings](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/settings.png)
 
@@ -81,20 +82,20 @@ Next, click Secrets in the left menu.
 
 ![secrets](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/secrets.png)
 
-Now click on the button **New repository secret**.
+Now, click on the button **New repository secret**.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/newreposecret.png)
 
-Now create all the following secrets
+Now create the two following secrets.
 
 | Name | Value
 | ----- | -----
 | AZURE_CREDENTIALS | The value from the step before when creating the service principal.
-| SUBSCRIPTION_ID | The ID of the subscription where all the resources will be created
+| SUBSCRIPTION_ID | The ID of the subscription where all the resources will be created.
 
-## Create the environment in Github
+## Create the environments in Github
 
-For the deployment to work correctly between your different environment (Dev, QA, Prod) you need to create them in Github.  For this go to Settings.
+For the deployment to work correctly between your different environments (Dev, QA, Prod) you need to create them in Github.  For this go to Settings.
 
 ![settings](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/settings.png)
 
@@ -106,15 +107,21 @@ Click the new environment button
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/newenvironment.png)
 
-You will create DEV and QA with those settings
+You will create DEV and QA with those settings.
 
 ![settings](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/set1.png)
 
-Now, create the PROD environment with the current settings. 
+Now, create the **PROD** environment with this setting.
 
 ![settings](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/set2.png)
 
-For production, you will add a reviewers, you can use your own Github user.  The goal here is most of the time before going to production you want someone to approve the deployment of the artifact, in this case the trained model tested in QA migrated from Dev.
+Be sure to click the button **Save protection rules** after adding the required reviewers.
+
+For production, you will add a reviewer, you can use your own Github user.  The goal here it's to illustrate a common practice in CI/CD, that nothing goes to production before being approved.
+
+You should now have 3 environments that look like this.
+
+![settings](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/environments.png)
 
 ## Run the infrastructure Github Action
 
