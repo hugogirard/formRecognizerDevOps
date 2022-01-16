@@ -284,6 +284,16 @@ You will create a new application setting with the name **FunctionKeyCode** and 
 
 Click the **OK button** and finally click the **Save** button at the top.
 
+Now, click on the Overview button in the left menu.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/overview.png)
+
+In the right side you will see the URL of the Web App, click on it.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/url.png)
+
+This will open the Blazor App
+
 # Disclaimer
 
 The code in this repo is NOT production grade and lacks any automated testing. It is intentionally kept as simple as possible (KISS). Its primary purpose is demonstrating DevOps concept with Form Recognizer and not being a full fledged application that can be put into production as is.
