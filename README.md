@@ -125,13 +125,13 @@ You should now have 3 environments that look like this.
 
 ## Run the infrastructure Github Action
 
-Now is time to create all the Azure Resources by running the Github Action that will create the infrastructure as code.
+Now it's time to create all the Azure Resources by running the proper Github Action.
 
 Now, click on the menu in the **Actions** tab.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/actions.png)
 
-You have a warning that tell you the Github Action are disabled, click the gree button to enable the Github actions.
+You will have a warning that tells you the Github Actions are disabled, click the green button to enable them.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/accept.png)
 
@@ -139,13 +139,13 @@ Now click on the Create Azure Resources in the left menu.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/createazureresource.png)
 
-Now click on the Run workflow button.
+Now click on the Run workflow button and click on the green button called **Run workflow**.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/run.png)
 
-This Github action will create in parallel the 3 environments, and build and deploy the Azure Function.
+This Github action will create in parallel the 3 environments once it's completed it will build and deploy the Azure Function and Blazor Web App.
 
-This is what the Github Action look like
+This is what the Github Action look like:
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/infra.png)
 
@@ -157,9 +157,9 @@ Those secrets are needed to deploy your model between your different environment
 
 | Name | Value
 | ----- | -----
-| FUNCTION_COPY_MODEL | This is the endpoint of the copy model function
-| FUNCTION_VALIDATE | This is the endpoint of the validate function
-| FUNCTION_TRAIN_MODEL | This is the endpoint of the validate function train model
+| FUNCTION_COPY_MODEL_ENDPOINT | This is the endpoint of the copy model function
+| FUNCTION_VALIDATE_ENDPOINT | This is the endpoint of the validate function
+| FUNCTION_TRAIN_MODEL_ENDPOINT | This is the endpoint of the validate function train model
 
 ### Function Copy Model Endpoint
 

@@ -20,7 +20,7 @@ jobs:
 
       - name: Run Azure PowerShell script validate
         run: |
-          ./scripts/validateModel.ps1 -modelId ${{ github.event.inputs.modelId }} -endpoint ${{ secrets.FUNCTION_VALIDATE }}
+          ./scripts/validateModel.ps1 -modelId ${{ github.event.inputs.modelId }} -endpoint ${{ secrets.FUNCTION_VALIDATE_ENDPOINT }}
         shell: pwsh
 
   deploymentQA:
@@ -36,7 +36,7 @@ jobs:
       - name: Run Azure PowerShell script validate
         shell: pwsh 
         run: |
-          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 0 -destinationEnvironment 1 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL }}
+          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 0 -destinationEnvironment 1 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL_ENDPOINT }}
 
   deploymentPROD:
     name: Deployment in PROD
@@ -51,5 +51,5 @@ jobs:
       - name: Run Azure PowerShell script validate
         shell: pwsh 
         run: |
-          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 1 -destinationEnvironment 2 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL }}          
+          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 1 -destinationEnvironment 2 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL_ENDPOINT }}          
                
