@@ -12,6 +12,7 @@
     - [Function Train Model](#function-train-model)
   - [Train the model](#train-the-model)
   - [Copy the model in QA environment](#copy-the-model-in-qa-environment)
+- [Blazor Web App](#blazor-web-app)
 - [Disclaimer](#disclaimer)
 
 # Introduction
@@ -195,7 +196,7 @@ Once all those secrets created in your repository you should see this.
 
 ## Train the model
 
-Like mentionned before, you can train the model using **Form Recognizer Studio** but in this sample all the document and labelling are already provided.  Because of this we can leverage the SDK (that is wrapped inside the Azure Function).
+Like mentioned before, you can train the model using **Form Recognizer Studio** but in this sample all the document and labelling are already provided.  Because of this we can leverage the SDK (that is wrapped inside the Azure Function).
 
 Go to the Azure Storage in the resource group **rg-form-recognizer-devops-dev**.  
 
@@ -207,21 +208,21 @@ Now click on the button Container at the top
 
 1![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/container.png)
 
-Create a new container called **model**
+You will see a container called **model**, click on it.
 
-![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/model.png)
+Now you will need to upload all the assets in the container. 
 
-Now you will need to upload all the assets in the new container, in the git repository you will find a folder called model.
+In the git repository you will find a folder called model.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/folder.png)
 
-Upload all the files in this folder into the container created before.
+Upload all the files in this folder into the container.
 
-Once is done your container should look like something like this.
+Once it is done your container should look like something like this.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/modelcontainer.png)
 
-Now go back to the **Actions** menu in the github repository.
+Now go back to the **Actions** menu in the Github repository.
 
 Select the train model action
 
@@ -231,25 +232,57 @@ Now run this Github action, once is done this will return a Guid (this is the ID
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/trained.png)
 
-## Copy the model in QA environment
+It's possible to know all the models you have in your environment using the Blazor Web App.  This will be explained later in this document.
 
-Now the model is trained in DEV environment, is now time to migrate it to the QA environment.
+## Copy the Model in QA environment
+
+Now the model is trained in DEV environment, it is now time to migrate it to the QA environment.
 
 Go back to the **Actions** menu and select the action Migrate Model.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/migrate.png)
 
-You will need to enter the **GUID** of the model trained before.
+You will need to enter the **GUID** of the model trained before (previous Github Action).
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/copymodel.png)
 
-First, the github action will validate the model is present in the DEV environment, if it's the case it will copy the model in QA environment.  Once this is complete you should see something like this.
+First, the github action will validate the model is present in the DEV environment.  If it's the case, it will copy the model into QA environment.  Once this is completed, you should see something like this.
 
 ![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/migratemodel.png)
 
-As you can see, the approver you defined before in your PROD environment need to approve before the model is copied into PROD.
+As you can see, the approver you defined before in your PROD environment need to approve before the model is copied into production.
 
-You can now review the deployments and approve it. Once is done the model will be copied in the PROD environment.
+You can now review the deployments and approve it by clicking the **Review deployments button** at the top.
+
+# Blazor Web App
+
+Now that you have copied the model in all environments it's time to test it.  Before using the Blazor Web app, you will need to add one configuration to it.
+
+Go back to your Azure function in the resource group **rg-form-recognizer-devops-utility**.
+
+Click in the left menu **App keys**.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/appkeys.png)
+
+You will see two keys, _master and default, click the default one and copy the value.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/twokeys.png)
+
+Now go the blazor app called **blazor-admin-###** and click on it.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/blazor.png)
+
+Click on the Configuration in the left menu.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/configuration.png)
+
+You will now need to create a new application setting, for this, click on the button **New application setting**
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/newsetting.png)
+
+You will create a new application setting with the name **FunctionKeyCode** and the value copied from the **App Keys** of the Azure Function.
+
+Click the **OK button** and finally click the **Save** button at the top.
 
 # Disclaimer
 
