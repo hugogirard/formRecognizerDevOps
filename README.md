@@ -175,19 +175,19 @@ Click on the left menu on Functions
 
 You will see all functions in the function app
 
-![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/funtions2.png)
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/functions2.png)
 
-Click on the CopyModel one and click on the button **Get Function Url** and copy the value in the Github Secret **FUNCTION_COPY_MODEL**
+Click on the CopyModel one and click on the button **Get Function Url** and copy the value in the Github Secret **FUNCTION_COPY_MODEL_ENDPOINT**
 
-![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/funtionurl.png)
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/functionurl.png)
 
 ### Function Validate Endpoint
 
-Repeat the previous step but this time get the function url for the **ValidateModelExists** function and create the Github secret **FUNCTION_TRAIN_MODEL**.
+Repeat the previous step but this time get the function URL for the **ValidateModelExists** function and create the Github secret **FUNCTION_VALIDATE_ENDPOINT**.
 
 ### Function Train Model
 
-Repeat the previous step but this time get the function url for the **TrainModel** function and create the Github secret **FUNCTION_VALIDATE**.
+Repeat the previous step but this time get the function url for the **TrainModel** function and create the Github secret **FUNCTION_TRAIN_MODEL_ENDPOINT**.
 
 Once all those secrets created in your repository you should see this.
 
