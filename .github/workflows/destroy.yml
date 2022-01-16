@@ -58,7 +58,7 @@ jobs:
       - name: Remove soft delete form Recognizer
         shell: pwsh 
         run: |
-          .scripts/deleteForm.ps1 -subscriptionId ${{ secrets.SUBSCRIPTION_ID }}
+          ./scripts/deleteForm.ps1 -subscriptionId ${{ secrets.SUBSCRIPTION_ID }}          
 
 
 
