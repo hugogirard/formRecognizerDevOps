@@ -1,4 +1,3 @@
-
 #
 # Notice: Any links, references, or attachments that contain sample scripts, code, or commands comes with the following notification.
 #
@@ -17,50 +16,20 @@
 # Please note: None of the conditions outlined in the disclaimer above will superseded the terms and conditions contained within the Premier Customer Services Description.
 #
 # DEMO POC - "AS IS"
+#
 
-name: Destroy Resources
+param(    
+    [Parameter(Mandatory = $true)]
+    [string]$subscriptionId
+)
 
-on:
-  workflow_dispatch:
+$results=az rest --method get --header 'Accept=application/json' -u "https://management.azure.com/subscriptions/$subscriptionId/providers/Microsoft.CognitiveServices/deletedAccounts?api-version=2021-04-30"
+$resources = $results | ConvertFrom-Json
 
-env:
-  RG-DEV: 'rg-form-recognizer-devops-dev'
-  RG-QA: 'rg-form-recognizer-devops-qa'
-  RG-PROD: 'rg-form-recognizer-devops-prod'
-  FORM_TAG: 'frm-devops-demo-tag-${{ secrets.SUBSCRIPTION_ID}}'
+$tag="frm-devops-demo-tag-$subscriptionId"
 
-jobs:
-
-  destroy-resource-group:
-
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - name: Azure Login
-        uses: Azure/login@v1.1
-        with:          
-          creds: ${{ secrets.AZURE_CREDENTIALS }}          
-          enable-AzPSSession: false     
-  
-      - name: Destroy resource group
-        run: |
-         if [ $(az group exists --name ${{ env.RG-DEV }}) = true ]; then
-           az group delete -n ${{ env.RG-DEV }} --yes  
-         fi        
-         if [ $(az group exists --name ${{ env.RG-QA }}) = true ]; then
-           az group delete -n ${{ env.RG-QA }} --yes  
-         fi        
-         if [ $(az group exists --name ${{ env.RG-PROD }}) = true ]; then
-           az group delete -n ${{ env.RG-PROD }} --yes  
-         fi                          
-
-      - name: Remove soft delete form Recognizer
-        shell: pwsh 
-        run: |
-          .scripts/deleteForm.ps1 -subscriptionId ${{ secrets.SUBSCRIPTION_ID }}
-
-
-
-
-    
+ForEach($resource in $resources.value) {
+    if ($resource.tags.description -eq $tag) {
+        az resource delete --ids $resource.id
+    }    
+}

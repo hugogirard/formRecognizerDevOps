@@ -294,6 +294,20 @@ In the right side you will see the URL of the Web App, click on it.
 
 This will open the Blazor App
 
+## Destroy the resources
+
+If you want to destroy all the resources create in Azure you can run the Github action called **Destroy Resources**.
+
+**IMPORTANT!!!**
+
+The form recognize resources have the soft delete option in Azure.  The Github action will delete them permanently looking for resources with the tag.
+
+``
+frm-devops-demo-tag-[your subscription id]
+``
+
+Be sure nothing else in your Azure subscription has this tag.
+
 # Disclaimer
 
 The code in this repo is NOT production grade and lacks any automated testing. It is intentionally kept as simple as possible (KISS). Its primary purpose is demonstrating DevOps concept with Form Recognizer and not being a full fledged application that can be put into production as is.
