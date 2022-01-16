@@ -45,13 +45,13 @@ jobs:
   
       - name: Destroy resource group
         run: |
-         if [ $(az group exists --name ${{ env.RG-DEV }}) = false ]; then
+         if [ $(az group exists --name ${{ env.RG-DEV }}) = true ]; then
            az group delete -n ${{ env.RG-DEV }} --yes  
          fi        
-         if [ $(az group exists --name ${{ env.RG-QA }}) = false ]; then
+         if [ $(az group exists --name ${{ env.RG-QA }}) = true ]; then
            az group delete -n ${{ env.RG-QA }} --yes  
          fi        
-         if [ $(az group exists --name ${{ env.RG-PROD }}) = false ]; then
+         if [ $(az group exists --name ${{ env.RG-PROD }}) = true ]; then
            az group delete -n ${{ env.RG-PROD }} --yes  
          fi                          
 
