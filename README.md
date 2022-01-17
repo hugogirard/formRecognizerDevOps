@@ -294,6 +294,26 @@ In the right side you will see the URL of the Web App, click on it.
 
 This will open the Blazor App
 
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/trained model.png)
+
+From there you can select one environment in the drop-down list
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/modelenv.png)
+
+Now, you can delete one model from there or click the **TEST** button, this will bring you to this following screen.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/test.png)
+
+This screen will allow you to upload a document and test your trained model with it.
+
+This sample provides a form to test your trained model, go in the folder **model** and from there go to the folder **Test**.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/test1.png)
+
+You have two pdf, the empty.pdf is a form you can use and fill with your own value to test.  The file **test1.pdf** is the one you can use to test your model.  Upload this file and you the Blazor Web App will call Form Recognizer to analyze the document based on your trained model.
+
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/resultmodel.png)
+
 ## Destroy the resources
 
 If you want to destroy all the resources create in Azure you can run the Github action called **Destroy Resources**.
