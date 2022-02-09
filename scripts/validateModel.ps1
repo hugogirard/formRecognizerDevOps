@@ -21,7 +21,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$modelId,
     [Parameter(Mandatory = $true)]
-    [string]$endpoint
+    [Security.SecureString]$endpoint
 )
 
 try {
