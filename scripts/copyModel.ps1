@@ -31,7 +31,7 @@ param(
 
 try {    
 
-    $decryptedEndpoint = ConvertFrom-SecureString $endpoint -AsPlainText        
+    $decryptedEndpoint = ConvertFrom-SecureString $functionEndpoint -AsPlainText        
     $header = @{      
       "Content-Type"="application/json"
     } 
