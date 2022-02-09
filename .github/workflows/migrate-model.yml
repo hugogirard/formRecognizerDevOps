@@ -20,7 +20,7 @@ jobs:
 
       - name: Run Azure PowerShell script validate
         run: |
-          $secureString = convertto-securestring ${{ secrets.FUNCTION_VALIDATE_ENDPOINT }} -asplaintext -force
+          $secureString = ConvertTo-SecureString ${{ secrets.FUNCTION_VALIDATE_ENDPOINT }} -asplaintext -force
           ./scripts/validateModel.ps1 -modelId ${{ github.event.inputs.modelId }} -endpoint $secureString
         shell: pwsh
 
@@ -37,7 +37,8 @@ jobs:
       - name: Run Azure PowerShell script validate
         shell: pwsh 
         run: |
-          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 0 -destinationEnvironment 1 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL_ENDPOINT }}
+          $secureString = ConvertTo-SecureString ${{ secrets.FUNCTION_COPY_MODEL_ENDPOINT}} -asplaintext -force
+          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 0 -destinationEnvironment 1 -functionEndpoint $secureString
 
   deploymentPROD:
     name: Deployment in PROD
@@ -52,5 +53,6 @@ jobs:
       - name: Run Azure PowerShell script validate
         shell: pwsh 
         run: |
-          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 1 -destinationEnvironment 2 -functionEndpoint ${{ secrets.FUNCTION_COPY_MODEL_ENDPOINT }}          
+          $secureString = ConvertTo-SecureString ${{ secrets.FUNCTION_COPY_MODEL_ENDPOINT}} -asplaintext -force
+          ./scripts/copyModel.ps1 -modelId ${{ github.event.inputs.modelId }} -sourceEnvironment 1 -destinationEnvironment 2 -functionEndpoint $secureString
                
