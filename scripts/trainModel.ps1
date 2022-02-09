@@ -20,7 +20,7 @@
 
 param(    
     [Parameter(Mandatory = $true)]
-    [string]$functionEndpoint
+    [Security.SecureString]$functionEndpoint
 )
 
 try {        
@@ -28,6 +28,7 @@ try {
       "Content-Type"="application/json"
     } 
     
+    $functionEndpoint = ConvertFrom-SecureString $functionEndpoint
     $modelId = New-Guid
     $description = "Job Model for $modelId"
 
@@ -45,6 +46,6 @@ try {
     return $modelId
 }
 catch {
-    throw $PSItem
+    throw "Something Bad Happen"
 }
 
