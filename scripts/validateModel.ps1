@@ -25,7 +25,8 @@ param(
 )
 
 try {
-
+    
+    $endpoint = ConvertFrom-SecureString $endpoint
     $values = $endpoint.Split("?")
     $endpoint = $values[0]
     $code = $values[1].Replace("code=","")
@@ -45,5 +46,5 @@ try {
     }
 }
 catch {    
-    throw $PSItem    
+    throw "Something happen"    
 }
