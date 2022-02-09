@@ -26,19 +26,17 @@ param(
 
 try {
     
-    $endpoint = ConvertFrom-SecureString $endpoint
-    $values = $endpoint.Split("?")
-    $endpoint = $values[0]
+    $decryptedEndpoint = ConvertFrom-SecureString $endpoint -AsPlainText
+    $values = $decryptedEndpoint.Split("?")
+    $decryptedEndpoint = $values[0]
     $code = $values[1].Replace("code=","")
 
     $header = @{        
         "Content-Type"="application/json"
         "x-functions-key"="$code"
     } 
-    Write-Output $code
-    $url = $endpoint + "?modelId=$modelId&environment=0" 
-    Write-Output $url
 
+    $url = $decryptedEndpoint + "?modelId=$modelId&environment=0" 
     $response = Invoke-WebRequest -Uri $url -Method 'Get' -Headers $header
 
     if ($response.StatusCode -ne 200) {
