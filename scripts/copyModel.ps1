@@ -26,11 +26,12 @@ param(
     [Parameter(Mandatory = $true)]
     [int]$destinationEnvironment,        
     [Parameter(Mandatory = $true)]
-    [string]$functionEndpoint
+    [Security.SecureString]$functionEndpoint
 )
 
 try {    
-        
+
+    $decryptedEndpoint = ConvertFrom-SecureString $endpoint -AsPlainText        
     $header = @{      
       "Content-Type"="application/json"
     } 
@@ -41,13 +42,13 @@ try {
         "destinationEnvironment"="$destinationEnvironment"
     } | ConvertTo-Json
     
-    $response = Invoke-WebRequest -Uri $functionEndpoint -Method 'Post' -Headers $header -Body $body
+    $response = Invoke-WebRequest -Uri $decryptedEndpoint -Method 'Post' -Headers $header -Body $body
     
     if ($response.StatusCode -ne 200) {
         throw "Error, statusCode: $response.StatusCode"
     }
 }
 catch {
-    throw $PSItem
+    throw "Something happen"
 }
 
