@@ -46,6 +46,6 @@ try {
     return $modelId
 }
 catch {
-    throw "Something Bad Happen"
+    throw $PSItem
 }
 
