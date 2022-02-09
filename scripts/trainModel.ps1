@@ -28,7 +28,7 @@ try {
       "Content-Type"="application/json"
     } 
     
-    $functionEndpoint = ConvertFrom-SecureString $functionEndpoint
+    $functionEndpoint = ConvertFrom-SecureString $functionEndpoint -AsPlainText
     $modelId = New-Guid
     $description = "Job Model for $modelId"
 
