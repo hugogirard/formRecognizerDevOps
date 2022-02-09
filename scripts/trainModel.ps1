@@ -28,7 +28,7 @@ try {
       "Content-Type"="application/json"
     } 
     
-    $functionEndpoint = ConvertFrom-SecureString $functionEndpoint -AsPlainText
+    $decryptedEndpoint = ConvertFrom-SecureString $functionEndpoint -AsPlainText
     $modelId = New-Guid
     $description = "Job Model for $modelId"
 
@@ -37,7 +37,7 @@ try {
         "description"="$description"        
     } | ConvertTo-Json
     
-    $response = Invoke-WebRequest -Uri $functionEndpoint -Method 'Post' -Headers $header -Body $body
+    $response = Invoke-WebRequest -Uri $decryptedEndpoint -Method 'Post' -Headers $header -Body $body
     
     if ($response.StatusCode -ne 200) {
         throw "Error, statusCode: $response.StatusCode"
