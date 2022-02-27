@@ -71,11 +71,11 @@ public class TrainModel
             BuildModelOperation operation;
             if (!string.IsNullOrEmpty(modelId))
             {
-                operation = await trainingClient.StartBuildModelAsync(sas, modelId: modelId, buildOptions);
+                operation = await trainingClient.StartBuildModelAsync(sas, DocumentBuildMode.Template, modelId: modelId, buildOptions);                
             }
             else 
             {
-                operation = await trainingClient.StartBuildModelAsync(sas,buildModelOptions: buildOptions);
+                operation = await trainingClient.StartBuildModelAsync(sas, DocumentBuildMode.Template,buildModelOptions: buildOptions);
             }
 
             Response<DocumentModel> operationResponse = await operation.WaitForCompletionAsync();
