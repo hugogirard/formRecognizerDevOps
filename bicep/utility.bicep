@@ -26,8 +26,8 @@ param prodFormRecognizerName string
 param devResourceGroupName string
 param qaResourceGroupName string
 param prodResourceGroupName string
+param location string = resourceGroup().location
 
-var location = resourceGroup().location
 var suffix = uniqueString(resourceGroup().id)
 
 module insight 'modules/insights/insights.bicep' = {

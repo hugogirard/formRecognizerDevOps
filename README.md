@@ -206,8 +206,6 @@ Click on the **Containers** menu in the left
 
 Now click on the button Container at the top
 
-1![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/container.png)
-
 You will see a container called **model**, click on it.
 
 Now you will need to upload all the assets in the container. 
@@ -294,7 +292,7 @@ In the right side you will see the URL of the Web App, click on it.
 
 This will open the Blazor App
 
-![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/trained model.png)
+![newreposecret](https://raw.githubusercontent.com/hugogirard/formRecognizerDevOps/main/images/trained_model.png)
 
 From there you can select one environment in the drop-down list
 
