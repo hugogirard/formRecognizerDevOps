@@ -34,7 +34,7 @@ public class ModelInfo
 
     }
 
-    public ModelInfo(DocumentModelInfo documentModelInfo)
+    public ModelInfo(DocumentModelSummary documentModelInfo)
     {
         ModelId = documentModelInfo.ModelId;
         Description = documentModelInfo.Description;

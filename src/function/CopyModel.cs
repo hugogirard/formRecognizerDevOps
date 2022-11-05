@@ -34,7 +34,7 @@ public class CopyModel
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
     [OpenApiRequestBody("application/json", typeof(CopyModelParameter), Description = "The Copy Model Information", Required = false)]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(DocumentModel), Description = "The Copy Custom Model definition")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(DocumentModelDetails), Description = "The Copy Custom Model definition")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
     {
@@ -58,21 +58,17 @@ public class CopyModel
 
                 var sourceClient = _formClientFactory.CreateAdministrationClient(copyModel.SourceEnvironment);
                 var targetClient = _formClientFactory.CreateAdministrationClient(copyModel.DestinationEnvironment);
-
+                
                 // Get info of the model to copy (description)
-                var response = await sourceClient.GetModelAsync(copyModel.SourceModelId);
+                var response = await sourceClient.GetDocumentModelAsync(copyModel.SourceModelId);
 
                 if (!response.GetRawResponse().Status.IsSuccessStatusCode())
                     return new NotFoundObjectResult("Cannot get the info of the source model");
-
-                CopyAuthorization copyAuthorization = await targetClient.GetCopyAuthorizationAsync(response.Value.ModelId,response.Value.Description);
-
-                CopyModelOperation newModelOperation = await sourceClient.StartCopyModelAsync(copyModel.SourceModelId, copyAuthorization);
-
-                await newModelOperation.WaitForCompletionAsync();
-                DocumentModel newModel = newModelOperation.Value;
-
-                return new OkObjectResult(newModel);
+                
+                DocumentModelCopyAuthorization copyAuthorization = await targetClient.GetCopyAuthorizationAsync(response.Value.ModelId,response.Value.Description);
+                CopyDocumentModelToOperation newModelOperation = await sourceClient.CopyDocumentModelToAsync(WaitUntil.Completed, copyModel.SourceModelId, copyAuthorization);                
+                
+                return new OkObjectResult(newModelOperation.Value);
 
             }
             else

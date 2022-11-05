@@ -38,7 +38,7 @@ public class ValidateModelExists
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
     [OpenApiParameter(name: "modelId", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **modelId** to validate")]
     [OpenApiParameter(name: "environment", In = ParameterLocation.Query, Required = true, Type = typeof(MODEL_ENVIRONMENT), Description = "The **environment** where is the model located")]
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(DocumentModel), Description = "The Custom Model definition")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(DocumentModelDetails), Description = "The Custom Model definition")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
     {
@@ -60,7 +60,7 @@ public class ValidateModelExists
 
             var trainingClient = _formFactory.CreateAdministrationClient(formEnvironment);
 
-            Response<DocumentModel> operation = await trainingClient.GetModelAsync(modelId);
+            Response<DocumentModelDetails> operation = await trainingClient.GetDocumentModelAsync(modelId);
                         
             return new OkObjectResult(operation.Value);
       

@@ -53,10 +53,10 @@ public class GetModel
                 return new BadRequestObjectResult("The Environment query string is invalid");
 
             var trainingClient = _formClientFactory.CreateAdministrationClient(formEnvironment);
-
-            AsyncPageable<DocumentModelInfo> models = trainingClient.GetModelsAsync();
+            
+            AsyncPageable<DocumentModelSummary> models = trainingClient.GetDocumentModelsAsync();
             var modelsInfo = new List<ModelInfo>();
-            await foreach (DocumentModelInfo modelInfo in models)
+            await foreach (DocumentModelSummary modelInfo in models)
             {
                 // Remove the pre-build model from the list
                 if (!modelInfo.ModelId.ToLower().Contains("prebuilt"))
