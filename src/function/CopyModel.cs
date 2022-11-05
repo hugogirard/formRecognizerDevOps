@@ -58,16 +58,16 @@ public class CopyModel
 
                 var sourceClient = _formClientFactory.CreateAdministrationClient(copyModel.SourceEnvironment);
                 var targetClient = _formClientFactory.CreateAdministrationClient(copyModel.DestinationEnvironment);
-
+                
                 // Get info of the model to copy (description)
-                var response = await sourceClient.GetModelAsync(copyModel.SourceModelId);
+                var response = await sourceClient.GetDocumentModelAsync(copyModel.SourceModelId);
 
                 if (!response.GetRawResponse().Status.IsSuccessStatusCode())
                     return new NotFoundObjectResult("Cannot get the info of the source model");
-
-                CopyAuthorization copyAuthorization = await targetClient.GetCopyAuthorizationAsync(response.Value.ModelId,response.Value.Description);
-
-                CopyModelOperation newModelOperation = await sourceClient.StartCopyModelAsync(copyModel.SourceModelId, copyAuthorization);
+                
+                DocumentModelCopyAuthorization copyAuthorization = await targetClient.GetCopyAuthorizationAsync(response.Value.ModelId,response.Value.Description);
+                
+                //CopyDocumentModelToOperation newModelOperation = await sourceClient.CopyDocumentModelToAsync(copyModel.SourceModelId, copyAuthorization);
 
                 await newModelOperation.WaitForCompletionAsync();
                 DocumentModel newModel = newModelOperation.Value;
