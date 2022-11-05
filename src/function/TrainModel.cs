@@ -36,7 +36,7 @@ public class TrainModel
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
     [OpenApiRequestBody("application/json",typeof(Model),Description = "The model parameter", Required = false)]   
-    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(DocumentModel), Description = "The Custom Model definition")]
+    [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(DocumentModelDetails), Description = "The Custom Model definition")]
     public async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req)
     {
@@ -62,27 +62,26 @@ public class TrainModel
             // By default the training is done in the DEV environment
             var trainingClient = _formClientFactory.CreateAdministrationClient(MODEL_ENVIRONMENT.DEV);
 
-            var buildOptions = new BuildModelOptions();
+            var buildOptions = new BuildDocumentModelOptions();
             if (!string.IsNullOrEmpty(modelDescription)) 
             {
-                buildOptions.ModelDescription = modelDescription;
+                buildOptions.Description = modelDescription;
             }
-
-            BuildModelOperation operation;
+                        
+            BuildDocumentModelOperation operation;
             if (!string.IsNullOrEmpty(modelId))
             {
-                operation = await trainingClient.StartBuildModelAsync(sas, DocumentBuildMode.Template, modelId: modelId, buildOptions);                
+                operation = await trainingClient.BuildDocumentModelAsync(WaitUntil.Completed, sas, DocumentBuildMode.Template, modelId, options: buildOptions);
             }
             else 
             {
-                operation = await trainingClient.StartBuildModelAsync(sas, DocumentBuildMode.Template,buildModelOptions: buildOptions);
+                operation = await trainingClient.BuildDocumentModelAsync(WaitUntil.Completed, sas, DocumentBuildMode.Template, options: buildOptions);
             }
 
-            Response<DocumentModel> operationResponse = await operation.WaitForCompletionAsync();
+            //Response<DocumentModel> operationResponse = await operation.WaitForCompletionAsync();
+            // To check response here            
 
-            // To check response here
-
-            DocumentModel documentModel = operationResponse.Value;
+            DocumentModelDetails documentModel = operation.Value;
 
             return new OkObjectResult(documentModel);       
         }

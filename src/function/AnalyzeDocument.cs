@@ -57,9 +57,10 @@ public class Document
                     return new BadRequestObjectResult("The parameters are invalid");
 
                 var client = _formClientFactory.CreateAnalysisClient(documentInfo.Environment);
-
-                AnalyzeDocumentOperation operation = await client.StartAnalyzeDocumentFromUriAsync(documentInfo.ModelId, 
-                                                                                                   new Uri(documentInfo.DocumentUrl));
+                
+                AnalyzeDocumentOperation operation = await client.AnalyzeDocumentFromUriAsync(WaitUntil.Completed,
+                                                                                              documentInfo.ModelId, 
+                                                                                              new Uri(documentInfo.DocumentUrl));
                 // This should not be done in PRODUCTION
                 // Should query the result at a X frequency, this code is only for demo purpose
                 await operation.WaitForCompletionAsync();
@@ -71,7 +72,7 @@ public class Document
                 {
                     var documentResult = new DocumentResult 
                     {
-                        DocType = document.DocType
+                        DocType = document.DocumentType
                     };
                     
                     foreach (KeyValuePair<string, DocumentField> fieldKvp in document.Fields)

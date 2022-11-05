@@ -59,8 +59,8 @@ public class DeleteModel
                 return new BadRequestObjectResult("The DeleteModel parameters is invalid");
 
             var trainingClient = _factory.CreateAdministrationClient(deleteModelParameter.Environment);
-
-            Response response = await trainingClient.DeleteModelAsync(deleteModelParameter.ModelId);
+            
+            Response response = await trainingClient.DeleteDocumentModelAsync(deleteModelParameter.ModelId);
             
             return new ObjectResult(string.Empty) { StatusCode = response.Status };
 
