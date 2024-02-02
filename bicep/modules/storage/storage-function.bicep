@@ -51,8 +51,42 @@ resource storageAccountDocument 'Microsoft.Storage/storageAccounts@2021-04-01' =
   }
 }
 
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01' = {
+  parent: storageAccountDocument
+  name: 'default'
+  properties: {
+    cors: {
+      corsRules: [
+        {
+          allowedOrigins: [
+            '*'
+          ]
+          allowedMethods: [
+            'DELETE'
+            'GET'
+            'HEAD'
+            'MERGE'
+            'POST'
+            'OPTIONS'
+            'PUT'
+            'PATCH'
+          ]
+          exposedHeaders: [
+            '*'
+          ]
+          allowedHeaders: [
+            '*'
+          ]
+          maxAgeInSeconds: 200
+        }
+      ]
+    }
+  }
+}
+
 resource containerDocuments 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-04-01' = {
-  name: '${storageAccountDocument.name}/default/upload'
+  parent: blobService
+  name: 'upload'
   properties: {
     publicAccess: 'None'
   }
