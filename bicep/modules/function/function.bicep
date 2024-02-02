@@ -39,6 +39,10 @@ param prodResourceGroupName string
 var appServiceName = 'func-plan-${suffix}'
 var functionAppName = 'func-form-${suffix}'
 
+resource storageFunc 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
+ name: strAccountName
+}
+
 resource devStorage 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
   name: devStorageName
   scope: resourceGroup(devResourceGroupName)
@@ -87,11 +91,11 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${strAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(strAccountId, strAccountApiVersion).keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${strAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageFunc.listKeys().keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${strAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(strAccountId, strAccountApiVersion).keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${strAccountName};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageFunc.listKeys().keys[0].value}'
         }
         {
           name: 'ModelContainer'
@@ -103,7 +107,7 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         }                  
         {
           name: 'FormRecognizerDevKey'
-          value: listKeys(formDev.id,formDev.apiVersion).key1
+          value: formDev.listKeys().key1
         }        
         {
           name: 'FormRecognizerQaEndpoint'
@@ -111,7 +115,7 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'FormRecognizerQaKey'
-          value: listKeys(formQA.id,formQA.apiVersion).key1
+          value: formQA.listKeys().key1
         }        
         {
           name: 'FormRecognizerProdEndpoint'
@@ -119,11 +123,11 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         }                 
         {
           name: 'FormRecognizerProdKey'
-          value: listKeys(formPROD.id,formPROD.apiVersion).key1
+          value: formPROD.listKeys().key1
         } 
         {
           name: 'DevStorageCnxString'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${devStorage.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(devStorage.id, devStorage.apiVersion).keys[0].value}'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${devStorage.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${devStorage.listKeys().keys[0].value}'
         }                
         {
           name: 'WEBSITE_CONTENTSHARE'
