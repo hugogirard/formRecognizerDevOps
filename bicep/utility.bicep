@@ -59,8 +59,6 @@ module function 'modules/function/function.bicep' = {
     devResourceGroupName: devResourceGroupName
     qaResourceGroupName: qaResourceGroupName
     prodResourceGroupName: prodResourceGroupName
-    strAccountApiVersion: storage.outputs.strAccountApiVersion
-    strAccountId: storage.outputs.strAccountId
     strAccountName: storage.outputs.strAccountName    
     suffix: suffix    
   }

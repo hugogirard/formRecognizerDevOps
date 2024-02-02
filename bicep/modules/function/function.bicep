@@ -24,8 +24,6 @@ param appInsightKey string
 param appInsightCnxString string
 
 param strAccountName string
-param strAccountId string
-param strAccountApiVersion string
 
 param devStorageName string
 param devFormRecognizerName string
